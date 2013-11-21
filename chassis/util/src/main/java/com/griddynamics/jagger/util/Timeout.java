@@ -18,17 +18,46 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.griddynamics.jagger.engine.e1.collector;
+package com.griddynamics.jagger.util;
 
-import com.griddynamics.jagger.engine.e1.Provider;
+public class Timeout {
+    private long            value = 0;
+    private final String    unit = "ms";
+    private String          name = "";
 
-/**
- * @author Nikolay Musienko
- *         Date: 25.07.13
- */
+    public Timeout(long value, String name) {
+        this.value = value;
+        this.name = name;
+    }
+    public Timeout() {
+        this(0, "");
+    }
+    public Timeout(Timeout timeout) {
+        this(timeout.getValue(), timeout.getName());
+    }
 
-public interface MetricAggregatorProvider extends Provider<MetricAggregator> {
+    public String getUnit() {
+        return unit;
+    }
 
-    MetricAggregator provide();
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public long getValue() {
+        return value;
+    }
+
+    public void setValue(long value) {
+        this.value = value;
+    }
+
+    public String toString() {
+        return this.value + " " + this.unit + " (" + this.name + ")";
+    }
 
 }

@@ -159,7 +159,7 @@ public class MonitorProcess extends LogProcessor implements NodeProcess<Monitori
 
     @Override
     public void stop() {
-        log.debug("Stop of monitoring requested. agent {}", agentId);
+        log.info("Stop of monitoring requested. agent {}", agentId);
         if(alive){
             latch = new CountDownLatch(1);
             alive = false;
