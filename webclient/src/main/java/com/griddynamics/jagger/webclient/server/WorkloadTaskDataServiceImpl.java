@@ -70,7 +70,7 @@ public class WorkloadTaskDataServiceImpl implements WorkloadTaskDataService {
             dto.setClockValue(data.getClockValue());
             dto.setTermination(data.getTermination());
             dto.setKernels(data.getKernels());
-            dto.setTotalDuration(data.getTotalDuration());
+//            dto.setTotalDuration(data.getTotalDuration());
             dto.setThroughput(data.getThroughput());
             dto.setFailuresCount(data.getFailuresCount());
             dto.setSuccessRate(data.getSuccessRate());
@@ -133,7 +133,7 @@ public class WorkloadTaskDataServiceImpl implements WorkloadTaskDataService {
             dto.setClockValue(data.getClockValue());
             dto.setTermination(data.getTermination());
             dto.setKernels(data.getKernels());
-            dto.setTotalDuration(data.getTotalDuration());
+//            dto.setTotalDuration(data.getTotalDuration());
             dto.setThroughput(data.getThroughput());
             dto.setFailuresCount(data.getFailuresCount());
             dto.setSuccessRate(data.getSuccessRate());
@@ -182,7 +182,7 @@ public class WorkloadTaskDataServiceImpl implements WorkloadTaskDataService {
             dto.setClockValue(data.getClockValue());
             dto.setTermination(data.getTermination());
             dto.setKernels(data.getKernels());
-            dto.setTotalDuration(data.getTotalDuration());
+//            dto.setTotalDuration(data.getTotalDuration());
             dto.setThroughput(data.getThroughput());
             dto.setFailuresCount(data.getFailuresCount());
             dto.setSuccessRate(data.getSuccessRate());

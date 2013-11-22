@@ -13,7 +13,6 @@
     <parameter name="context" class="com.griddynamics.jagger.reporting.ReportingContext"/>
     <field name="name" class="java.lang.String"/>
     <field name="throughputDeviation" class="java.lang.Double"/>
-    <field name="totalDurationDeviation" class="java.lang.Double"/>
     <field name="successRateDeviation" class="java.lang.Double"/>
     <field name="avgLatencyDeviation" class="java.lang.Double"/>
     <field name="stdDevLatencyDeviation" class="java.lang.Double"/>
@@ -98,11 +97,6 @@
                 <reportElement style="Compact_Header_Bold" positionType="Float" x="330" y="0" width="40" height="20"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle"/>
                 <textFieldExpression class="java.lang.Double"><![CDATA[$F{throughputDeviation}]]></textFieldExpression>
-            </textField>
-            <textField isStretchWithOverflow="true" pattern="##0.00%">
-                <reportElement style="Compact_Header_Bold" positionType="Float" x="370" y="0" width="40" height="20"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle"/>
-                <textFieldExpression class="java.lang.Double"><![CDATA[$F{totalDurationDeviation}]]></textFieldExpression>
             </textField>
             <textField isStretchWithOverflow="true" pattern="##0.00%">
                 <reportElement style="Compact_Header_Bold" positionType="Float" x="410" y="0" width="40" height="20"/>

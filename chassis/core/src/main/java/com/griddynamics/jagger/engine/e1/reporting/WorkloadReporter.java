@@ -102,7 +102,7 @@ public class WorkloadReporter extends AbstractReportProvider {
 			reportData.setSamples(resultData.getSamples());
 			reportData.setClock(resultData.getClock());
 			reportData.setTermination(resultData.getTermination());
-			reportData.setTotalDuration(resultData.getTotalDuration());
+	//		reportData.setTotalDuration(resultData.getTotalDuration());
 			reportData.setThroughput(resultData.getThroughput());
 			reportData.setFailuresCount(resultData.getFailuresCount());
 			reportData.setSuccessRate(resultData.getSuccessRate());
@@ -238,13 +238,13 @@ public class WorkloadReporter extends AbstractReportProvider {
 			this.samples = samples;
 		}
 
-		public BigDecimal getTotalDuration() {
-			return totalDuration;
-		}
+//		public BigDecimal getTotalDuration() {
+//			return totalDuration;
+//		}
 
-		public void setTotalDuration(BigDecimal totalDuration) {
-			this.totalDuration = totalDuration;
-		}
+//		public void setTotalDuration(BigDecimal totalDuration) {
+//			this.totalDuration = totalDuration;
+//		}
 
 		public BigDecimal getThroughput() {
 			return throughput;

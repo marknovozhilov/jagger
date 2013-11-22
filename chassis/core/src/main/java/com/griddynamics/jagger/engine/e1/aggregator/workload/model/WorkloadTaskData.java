@@ -36,7 +36,7 @@ public class WorkloadTaskData {
     private Integer clockValue;
     private String termination;
 	private Integer kernels;
-	private BigDecimal totalDuration;
+//	private BigDecimal totalDuration;
 	private BigDecimal throughput;
 	private Integer failuresCount;
 	private BigDecimal successRate;
@@ -118,13 +118,13 @@ public class WorkloadTaskData {
 		return kernels;
 	}
 
-	public BigDecimal getTotalDuration() {
-		return totalDuration;
-	}
+//	public BigDecimal getTotalDuration() {
+//		return totalDuration;
+//	}
 
-	public void setTotalDuration(BigDecimal totalDuration) {
-		this.totalDuration = totalDuration;
-	}
+//	public void setTotalDuration(BigDecimal totalDuration) {
+//		this.totalDuration = totalDuration;
+//	}
 
 	public BigDecimal getThroughput() {
 		return throughput;
@@ -190,7 +190,7 @@ public class WorkloadTaskData {
                 ", clockValue=" + clockValue +
                 ", termination='" + termination + '\'' +
                 ", kernels=" + kernels +
-                ", totalDuration=" + totalDuration +
+//                ", totalDuration=" + totalDuration +
                 ", throughput=" + throughput +
                 ", failuresCount=" + failuresCount +
                 ", successRate=" + successRate +
