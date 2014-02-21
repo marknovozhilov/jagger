@@ -91,6 +91,7 @@
 
     <bean id="commonDataService" class="com.griddynamics.jagger.webclient.server.CommonDataServiceImpl">
         <property name="userCommentAvailable" value="${user.comment.available}"/>
+        <property name="tagsAvailable" value="${tags.available}"/>
         <property name="userCommentMaxLength" value="${user.comment.max.length}"/>
     </bean>
 

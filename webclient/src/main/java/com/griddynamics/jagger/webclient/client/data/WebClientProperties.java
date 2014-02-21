@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class WebClientProperties implements Serializable {
 
     private boolean userCommentAvailable = false;
+    private boolean tagsAvailable = false;
     private int userCommentMaxLength = 250;
 
     public boolean isUserCommentAvailable() {
@@ -21,5 +22,13 @@ public class WebClientProperties implements Serializable {
 
     public void setUserCommentMaxLength(int userCommentMaxLength) {
         this.userCommentMaxLength = userCommentMaxLength;
+    }
+
+    public boolean isTagsAvailable() {
+        return tagsAvailable;
+    }
+
+    public void setTagsAvailable(boolean tagsAvailable) {
+        this.tagsAvailable = tagsAvailable;
     }
 }
