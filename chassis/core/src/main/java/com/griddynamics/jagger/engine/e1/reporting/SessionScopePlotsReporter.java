@@ -20,7 +20,7 @@
 package com.griddynamics.jagger.engine.e1.reporting;
 
 import com.griddynamics.jagger.dbapi.DatabaseService;
-import com.griddynamics.jagger.dbapi.dto.PlotSeriesDto;
+import com.griddynamics.jagger.dbapi.dto.PlotIntegratedDto;
 import com.griddynamics.jagger.dbapi.model.MetricGroupNode;
 import com.griddynamics.jagger.dbapi.model.MetricNode;
 import com.griddynamics.jagger.dbapi.model.PlotNode;
@@ -43,7 +43,7 @@ public class SessionScopePlotsReporter extends AbstractReportProvider {
     private Logger log = LoggerFactory.getLogger(SessionScopePlotsReporter.class);
 
     private MetricPlotsReporter.MetricPlotDTOs result = new MetricPlotsReporter.MetricPlotDTOs();
-    private Map<MetricNode, PlotSeriesDto> plots = Collections.EMPTY_MAP;
+    private Map<MetricNode, PlotIntegratedDto> plots = Collections.EMPTY_MAP;
 
     private DatabaseService databaseService;
 
