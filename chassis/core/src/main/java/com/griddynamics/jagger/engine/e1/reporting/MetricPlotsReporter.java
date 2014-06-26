@@ -128,7 +128,6 @@ public class MetricPlotsReporter extends AbstractMappedReportProvider<String> {
             this.groupTitle = groupTitle;
         }
 
-
     }
 
     @Override
@@ -146,7 +145,6 @@ public class MetricPlotsReporter extends AbstractMappedReportProvider<String> {
         return new JRBeanCollectionDataSource(Collections.singleton(result));
     }
 
-    // todo Session scope plots isn't supported by code below (JFG-724)
     private void createFromTree() {
 
         plots = new HashMap<Long, MetricPlotDTOs>();
@@ -174,9 +172,10 @@ public class MetricPlotsReporter extends AbstractMappedReportProvider<String> {
         for (TestDetailsNode testDetailsNode : detailsNode.getTests()) {
             getReport(testDetailsNode, testDetailsNode.getTaskDataDto().getId());
         }
+
     }
 
-    private JCommonDrawableRenderer makePlot(PlotSeriesDto plotSeriesDto) {
+    public static JCommonDrawableRenderer makePlot(PlotSeriesDto plotSeriesDto) {
         XYSeriesCollection plotCollection = new XYSeriesCollection();
         for (PlotDatasetDto datasetDto : plotSeriesDto.getPlotSeries()) {
             XYSeries plotEntry = new XYSeries(datasetDto.getLegend());
