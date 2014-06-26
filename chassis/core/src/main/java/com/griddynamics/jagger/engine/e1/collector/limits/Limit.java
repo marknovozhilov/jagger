@@ -24,39 +24,27 @@ package com.griddynamics.jagger.engine.e1.collector.limits;
  *
  * @details
  * Metric comparison will be provided by @ref BasicTGDecisionMakerListener decision maker or @n
- * by custom implementation of @ref TestGroupDecisionMakerListener @n
+ * by custom implementation of @ref com.griddynamics.jagger.engine.e1.collector.testgroup.TestGroupDecisionMakerListener "TestGroupDecisionMakerListener" @n
  * Metric value will be compared with some reference: ref, where ref is: @n
  * @li value from baseline when refValue = null @n
  * @li refValue in all other cases @n
  *
- * Result pass when value in range (LWT*ref .. UWT*ref) @n
- * Result warning when value in range (LET*ref .. LWT*ref) OR (UWT*ref .. UET*ref) @n
- * Result error when value is less than LET*ref OR is greater than UET*ref @n
+ * Result OK when value in range (LWT*ref .. UWT*ref) @n
+ * Result WARNING when value in range (LET*ref .. LWT*ref) OR (UWT*ref .. UET*ref) @n
+ * Result FATAL when value is less than LET*ref OR is greater than UET*ref @n
  */
 public class Limit {
-    /** Metric name (aka metric Id) - metric we are going to compare */
     private String metricName = null;
-
-    /** Description of this limit */
     private String limitDescription;
-
-    /** Reference value - absolute value used as reference for comparison. When refValue=null we will compare to baseline session value */
     private Double refValue = null;
-
-    /** Lower warning threshold - LWT. Relative value */
     private Double lowerWarningThreshold = 0D;
-
-    /** Upper warning threshold - UWT. Relative value */
     private Double upperWarningThreshold = 0D;
-
-    /** Lower error threshold - LET. Relative value */
     private Double lowerErrorThreshold = 0D;
-
-    /** Upper error threshold - UET. Relative value */
     private Double upperErrorThreshold = 0D;
 
     public Limit() {}
 
+    /** Returns metric name (aka metric Id) - metric we are going to compare */
     public String getMetricName() {
         return metricName;
     }
@@ -65,6 +53,7 @@ public class Limit {
         this.metricName = metricName;
     }
 
+    /** Returns description of this limit */
     public String getLimitDescription() {
         return limitDescription;
     }
@@ -73,6 +62,7 @@ public class Limit {
         this.limitDescription = limitDescription;
     }
 
+    /** Returns reference value - absolute value used as reference for comparison. When refValue=null we will compare to baseline session value */
     public Double getRefValue() {
         return refValue;
     }
@@ -81,6 +71,7 @@ public class Limit {
         this.refValue = refValue;
     }
 
+    /** Returns lower warning threshold - LWT. Relative value */
     public Double getLowerWarningThreshold() {
         return lowerWarningThreshold;
     }
@@ -89,6 +80,7 @@ public class Limit {
         this.lowerWarningThreshold = lowerWarningThreshold;
     }
 
+    /** Returns upper warning threshold - UWT. Relative value */
     public Double getUpperWarningThreshold() {
         return upperWarningThreshold;
     }
@@ -97,6 +89,7 @@ public class Limit {
         this.upperWarningThreshold = upperWarningThreshold;
     }
 
+    /** Returns lower error threshold - LET. Relative value */
     public Double getLowerErrorThreshold() {
         return lowerErrorThreshold;
     }
@@ -105,6 +98,7 @@ public class Limit {
         this.lowerErrorThreshold = lowerErrorThreshold;
     }
 
+    /** Returns upper error threshold - UET. Relative value */
     public Double getUpperErrorThreshold() {
         return upperErrorThreshold;
     }

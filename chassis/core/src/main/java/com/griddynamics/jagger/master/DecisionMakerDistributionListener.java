@@ -7,11 +7,12 @@ import com.griddynamics.jagger.dbapi.entity.DecisionPerTaskEntity;
 import com.griddynamics.jagger.dbapi.entity.MetricDescriptionEntity;
 import com.griddynamics.jagger.dbapi.entity.TaskData;
 import com.griddynamics.jagger.dbapi.util.SessionMatchingSetup;
+import com.griddynamics.jagger.engine.e1.BasicTGDecisionMakerListener;
+import com.griddynamics.jagger.engine.e1.Provider;
 import com.griddynamics.jagger.engine.e1.ProviderUtil;
 import com.griddynamics.jagger.engine.e1.collector.limits.*;
 import com.griddynamics.jagger.engine.e1.collector.testgroup.TestGroupDecisionMakerInfo;
 import com.griddynamics.jagger.engine.e1.scenario.WorkloadTask;
-import com.griddynamics.jagger.engine.e1.services.DataService;
 import com.griddynamics.jagger.engine.e1.services.DefaultDataService;
 import com.griddynamics.jagger.engine.e1.services.JaggerPlace;
 import com.griddynamics.jagger.engine.e1.services.data.service.MetricEntity;
@@ -52,12 +53,6 @@ public class DecisionMakerDistributionListener extends HibernateDaoSupport imple
     public void onTaskDistributionCompleted(String sessionId, String taskId, Task task) {
 
         if (task instanceof CompositeTask) {
-            TestGroupDecisionMakerListener decisionMakerListener = TestGroupDecisionMakerListener.Composer.compose(ProviderUtil.provideElements(((CompositeTask) task).getDecisionMakerListeners(),
-                    sessionId,
-                    taskId,
-                    nodeContext,
-                    JaggerPlace.TEST_GROUP_DECISION_MAKER_LISTENER));
-
             DefaultDataService dataService = new DefaultDataService(nodeContext);
 
             // Get tests in test group
@@ -162,20 +157,34 @@ public class DecisionMakerDistributionListener extends HibernateDaoSupport imple
                 }
             }
 
-            // Save decisions per metric if there were any
             if (decisionsPerTest.size() > 0) {
+                // Save decisions per metric if there were any
                 saveDecisionsForMetrics(sessionId, taskId, decisionsPerTest);
+
+                // Call test group decision maker listener with basic or customer code
+                List<Provider<TestGroupDecisionMakerListener>> providers = ((CompositeTask) task).getDecisionMakerListeners();
+                if ((providers == null) ||
+                        (providers.isEmpty())) {
+                    // no decision maker defined in XML schema
+                    // will use default one (basic)
+                    providers = new ArrayList<Provider<TestGroupDecisionMakerListener>>();
+                    providers.add(new BasicTGDecisionMakerListener());
+                }
+                TestGroupDecisionMakerListener decisionMakerListener = TestGroupDecisionMakerListener.Composer.compose(ProviderUtil.provideElements(providers,
+                        sessionId,
+                        taskId,
+                        nodeContext,
+                        JaggerPlace.TEST_GROUP_DECISION_MAKER_LISTENER));
+
+                TestGroupDecisionMakerInfo testGroupDecisionMakerInfo =
+                        new TestGroupDecisionMakerInfo((CompositeTask)task,sessionId,decisionsPerTest);
+
+                Decision decisionPerTestGroup = decisionMakerListener.onDecisionMaking(testGroupDecisionMakerInfo);
+
+                // Save decisions per test group
+                log.info("\n\nDecision for test group {} - {}\n",task.getTaskName(),decisionPerTestGroup);
+                saveDecisionsForTestGroup(sessionId, taskId, decisionPerTestGroup);
             }
-
-            // Call test group listener with basic or customer code
-            TestGroupDecisionMakerInfo testGroupDecisionMakerInfo =
-                    new TestGroupDecisionMakerInfo((CompositeTask)task,sessionId,decisionsPerTest);
-            Decision decisionPerTestGroup = decisionMakerListener.onDecisionMaking(testGroupDecisionMakerInfo);
-
-            log.info("\n\nDecision for test group {} - {}\n",task.getTaskName(),decisionPerTestGroup);
-
-            // Save decisions per test group
-            saveDecisionsForTestGroup(sessionId, taskId, decisionPerTestGroup);
         }
     }
 
@@ -215,9 +224,6 @@ public class DecisionMakerDistributionListener extends HibernateDaoSupport imple
             Double refValue = limit.getRefValue();
             Double value = metricValues.get(metricEntity).getValue();
             Decision decision = Decision.OK;
-
-            //todo ??? JFG-744 docu for decision making with use of limits
-            // !!! mention in docu
 
             // if metric entity already was used to take decision we will not use it
             // 'limit to metric' relation should be 'one to many' or 'one to one'

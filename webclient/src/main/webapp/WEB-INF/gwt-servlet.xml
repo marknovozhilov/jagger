@@ -126,6 +126,7 @@
     <bean id="ruleProvider_TreeViewGroup" class="com.griddynamics.jagger.dbapi.model.rules.TreeViewGroupRuleProvider">
         <property name="monitoringPlotGroups" ref="monitoringPlotGroups"/>
     </bean>
+    <bean id="ruleProvider_LegendTreeViewGroup" class="com.griddynamics.jagger.dbapi.model.rules.LegendTreeViewGroupRuleProvider"/>
 
     <bean id="databaseService" class="com.griddynamics.jagger.dbapi.DatabaseServiceImpl">
         <property name="threadPool" ref="executorService"/>
@@ -142,6 +143,7 @@
         <property name="sessionInfoServiceImpl" ref="sessionInfoService"/>
 
         <property name="treeViewGroupRuleProvider" ref="ruleProvider_TreeViewGroup"/>
+        <property name="legendTreeViewGroupRuleProvider" ref="ruleProvider_LegendTreeViewGroup"/>
         <property name="treeViewGroupMetricsToNodeRuleProvider" ref="ruleProvider_TreeViewGroupMetricsToNode"/>
 
         <property name="legendProvider" ref="legendProvider"/>

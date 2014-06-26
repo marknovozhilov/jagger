@@ -1,8 +1,7 @@
 package com.griddynamics.jagger.webclient.server;
 
 import com.griddynamics.jagger.dbapi.DatabaseService;
-import com.griddynamics.jagger.dbapi.dto.MetricDto;
-import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
+import com.griddynamics.jagger.dbapi.dto.SummaryIntegratedDto;
 import com.griddynamics.jagger.dbapi.model.MetricNode;
 import com.griddynamics.jagger.webclient.client.MetricDataService;
 import org.springframework.beans.factory.annotation.Required;
@@ -26,27 +25,7 @@ public class MetricDataServiceImpl implements MetricDataService {
     }
 
     @Override
-    public Map<MetricNode, List<MetricDto>> getMetrics(Set<MetricNode> metricNodes) throws RuntimeException {
-
-        List<MetricNameDto> metricNameDtos = new ArrayList<MetricNameDto>();
-        for (MetricNode metricNode : metricNodes) {
-            metricNameDtos.addAll(metricNode.getMetricNameDtoList());
-        }
-        List<MetricDto> allMetricDto = databaseService.getSummaryByMetricNameDto(metricNameDtos);
-
-        Map<MetricNode, List<MetricDto>> resultMap = new HashMap<MetricNode, List<MetricDto>>();
-        for (MetricDto metricDto : allMetricDto) {
-            for (MetricNode metricNode : metricNodes) {
-                if (metricNode.getMetricNameDtoList().contains(metricDto.getMetricName())) {
-                    if (!resultMap.containsKey(metricNode)) {
-                        resultMap.put(metricNode, new ArrayList<MetricDto>());
-                    }
-                    resultMap.get(metricNode).add(metricDto);
-                    break;
-                }
-            }
-        }
-
-        return resultMap;
+    public Map<MetricNode, SummaryIntegratedDto> getMetrics(Set<MetricNode> metricNodes) throws RuntimeException {
+        return databaseService.getSummaryByMetricNodes(metricNodes);
     }
 }

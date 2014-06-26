@@ -5,15 +5,13 @@ import com.griddynamics.jagger.master.CompositeTask;
 
 import java.util.Set;
 
-/** Class, which contains information for decision making
+/** Class, which contains information for decision making for some test group
  * @author Novozhilov Mark
  * @n
  * @par Details:
  * @details
  * @n
  * */
-
-//todo ??? JFG-744 docu for decision making with use of limits
 public class TestGroupDecisionMakerInfo {
     private CompositeTask testGroup;
     private String sessionId;
@@ -25,6 +23,7 @@ public class TestGroupDecisionMakerInfo {
         this.decisionsPerTest = decisionsPerTest;
     }
 
+    /** Returns full information about current test-group */
     public CompositeTask getTestGroup() {
         return testGroup;
     }
@@ -33,6 +32,7 @@ public class TestGroupDecisionMakerInfo {
         this.testGroup = testGroup;
     }
 
+    /** Returns session id */
     public String getSessionId() {
         return sessionId;
     }
@@ -41,6 +41,7 @@ public class TestGroupDecisionMakerInfo {
         this.sessionId = sessionId;
     }
 
+    /** Returns detailed information about decision per every test in this test group */
     public Set<DecisionPerTest> getDecisionsPerTest() {
         return decisionsPerTest;
     }

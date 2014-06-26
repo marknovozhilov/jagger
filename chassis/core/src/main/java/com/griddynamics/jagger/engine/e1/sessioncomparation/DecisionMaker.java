@@ -22,14 +22,15 @@ package com.griddynamics.jagger.engine.e1.sessioncomparation;
 import com.google.common.collect.Multimap;
 import com.griddynamics.jagger.util.Decision;
 
-// @todo edit please
 /** Make a decision(OK, WARNING, FATAL, ERROR) by current test
  * @author Dmitry Kotlyarov
+ * @n
+ * @deprecated It is recommended to compare metrics and take decision with use of limits: @ref DecisionMakerBasedOnLimits @n
  * @n
  * @par Details:
  * @details Make a decision based on comparison between current test and test from baseline session
  *
- * @ingroup Main_DecisionMakers_Base_group */
+ */
 public interface DecisionMaker {
 
     /** Returns decision
@@ -42,10 +43,3 @@ public interface DecisionMaker {
     Decision makeDecision(Multimap<String, Verdict> verdicts);
 
 }
-
-/* **************** How to customize decision maker ************************* */
-/// @defgroup Main_HowToCustomizeDecisionMakers_group Custom decision makers
-///
-/// @details  Under construction
-/// @todo implement docu
-///

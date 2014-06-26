@@ -29,7 +29,7 @@ import java.util.List;
  * @author Dmitry Kotlyarov
  * @n
  *
- * @ingroup Main_DecisionMakers_group */
+ */
 public class WorstCaseDecisionMaker implements DecisionMaker {
 
     /** Returns the worst decision of comparisons

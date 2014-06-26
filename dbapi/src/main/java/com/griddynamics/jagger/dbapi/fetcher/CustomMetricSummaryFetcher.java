@@ -1,20 +1,21 @@
 package com.griddynamics.jagger.dbapi.fetcher;
 
 
-import com.griddynamics.jagger.dbapi.dto.MetricDto;
+import com.griddynamics.jagger.dbapi.dto.SummaryMetricValueDto;
+import com.griddynamics.jagger.dbapi.dto.SummarySingleDto;
 import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
-import com.griddynamics.jagger.dbapi.dto.MetricValueDto;
 import com.griddynamics.jagger.dbapi.util.DataProcessingUtil;
 import com.griddynamics.jagger.dbapi.util.MetricNameUtil;
 
 import javax.persistence.PersistenceException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 
-public class CustomMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
+public class CustomMetricSummaryFetcher extends DbMetricDataFetcher<SummarySingleDto> {
 
     @Override
-    protected Set<MetricDto> fetchData(List<MetricNameDto> metricNames) {
+    protected Set<SummarySingleDto> fetchData(List<MetricNameDto> metricNames) {
 
         //custom metric
 
@@ -38,7 +39,7 @@ public class CustomMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
             return Collections.EMPTY_SET;
         }
 
-        Map<MetricNameDto, MetricDto> resultMap = new HashMap<MetricNameDto, MetricDto>();
+        Map<MetricNameDto, SummarySingleDto> resultMap = new HashMap<MetricNameDto, SummarySingleDto>();
         Map<Long, Map<String, MetricNameDto>> mappedMetricDtos = MetricNameUtil.getMappedMetricDtos(metricNames);
 
         for (Object[] mas : metrics){
@@ -57,27 +58,23 @@ public class CustomMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
             }
 
             if (!resultMap.containsKey(metricNameDto)) {
-                MetricDto metricDto = new MetricDto();
+                SummarySingleDto metricDto = new SummarySingleDto();
                 metricDto.setMetricName(metricNameDto);
-                metricDto.setValues(new HashSet<MetricValueDto>());
+                metricDto.setValues(new HashSet<SummaryMetricValueDto>());
                 resultMap.put(metricNameDto, metricDto);
             }
-            MetricDto metricDto = resultMap.get(metricNameDto);
+            SummarySingleDto metricDto = resultMap.get(metricNameDto);
 
             if (mas[0] == null) continue;
 
-            MetricValueDto value = new MetricValueDto();
-            value.setValue(new DecimalFormat("0.0###").format(mas[0]));
+            SummaryMetricValueDto value = new SummaryMetricValueDto();
+            value.setValue(new DecimalFormat("0.0###", new DecimalFormatSymbols(Locale.ENGLISH)).format(mas[0]));
 
             value.setSessionId(Long.parseLong((String)mas[1]));
             metricDto.getValues().add(value);
         }
 
-        for (MetricDto md : resultMap.values()) {
-            md.setPlotDatasetDto(generatePlotDatasetDto(md));
-        }
-
-        return new HashSet<MetricDto>(resultMap.values());
+        return new HashSet<SummarySingleDto>(resultMap.values());
     }
 
     /**

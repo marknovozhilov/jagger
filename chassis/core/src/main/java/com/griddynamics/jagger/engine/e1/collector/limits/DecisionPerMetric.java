@@ -5,13 +5,9 @@ import com.griddynamics.jagger.util.Decision;
 
 /** Class is used to describe result of comparison of particular metric to some limit */
 public class DecisionPerMetric {
-    /** Metric */
+
     private MetricEntity metricEntity;
-
-    /** Metric summary value */
     private Double metricValue;
-
-    /** Reference value used for comparison */
     private Double metricRefValue;
 
     /** Result of comparison of this metric */
@@ -24,18 +20,22 @@ public class DecisionPerMetric {
         this.decisionPerMetric = decisionPerMetric;
     }
 
+    /** Returns information about metric */
     public MetricEntity getMetricEntity() {
         return metricEntity;
     }
 
+    /** Returns metric summary value */
     public Double getMetricValue() {
         return metricValue;
     }
 
+    /** Returns reference value used for comparison */
     public Double getMetricRefValue() {
         return metricRefValue;
     }
 
+    /** Returns decision for this metric */
     public Decision getDecisionPerMetric() {
         return decisionPerMetric;
     }

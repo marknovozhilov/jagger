@@ -31,16 +31,14 @@
           class="com.griddynamics.jagger.engine.e1.sessioncomparation.ConfigurableSessionComparator">
 
         <property name="comparatorChain">
-            <ref bean="comparators_${chassis.engine.e1.reporting.session.comparison.monitoring.active}"/>
+            <ref bean="comparators_${chassis.decision.maker.with.limits.is.only.decision.maker}"/>
         </property>
         <property name="decisionMaker" ref="worstCaseDecisionMaker"/>
 
     </bean>
 
     <util:list id="comparators_true">
-        <ref bean="workloadFeatureComparator"/>
-        <ref bean="monitoringFeatureComparator"/>
-        <ref bean="limitsBasedFeatureComparator"/>
+       <ref bean="limitsBasedFeatureComparator"/>
     </util:list>
 
     <util:list id="comparators_false">
@@ -80,7 +78,7 @@
     </bean>
 
     <!-- Monitoring -->
-
+    <!-- Deprecated. Not used starting from 1.2.5 -->
     <bean id="monitoringFeatureComparator" class="com.griddynamics.jagger.engine.e1.sessioncomparation.monitoring.MonitoringFeatureComparator">
 
         <property name="monitoringParameterDecisionMaker" ref="stdDevMonitoringParameterDecisionMaker"/>

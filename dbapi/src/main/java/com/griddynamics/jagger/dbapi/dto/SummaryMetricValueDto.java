@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Time: 17:33
  * To change this template use File | Settings | File Templates.
  */
-public class MetricValueDto implements Serializable {
+public class SummaryMetricValueDto implements Serializable {
 
     private long sessionId;
     private String value;

@@ -1,4 +1,6 @@
 /// @page WebUiUserCommentsAndTags WebUi user comments and operations with tags
+/// @brief Section describes how to set user commenta and mark sessions with tags from Jagger Web client @n
+/// @details
 /// @n
 /// Back to @ref WebUiMain @n
 /// @n

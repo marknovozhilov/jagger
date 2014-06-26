@@ -31,14 +31,21 @@ import java.util.List;
 
 public class DefaultSessionStatusDecisionMaker implements SessionStatusDecisionMaker {
     private static final Logger log = LoggerFactory.getLogger(DefaultSessionStatusDecisionMaker.class);
-    private static final double epsilon = 0.0000001;
-    public static double successRateThreshold = 1.0;
+    private final double EPSILON = 0.0000001;
+    private double successRateThreshold = 1.0;
+    // key to avoid additional verification of success rate to set status of test
+    // recommended way to use limits based decision making for this purpose
+    private boolean doNotUseDeprecatedMethodToSetTestStatus = false;
 
     private String description;
 
     @Override
     public Decision decideOnTest(WorkloadTaskData workloadTaskData) {
-        if (MathUtils.compareTo(workloadTaskData.getSuccessRate().doubleValue(), successRateThreshold, epsilon) >= 0) {
+        if (doNotUseDeprecatedMethodToSetTestStatus) {
+            // ignore this decision maker
+            return Decision.OK;
+        }
+        if (MathUtils.compareTo(workloadTaskData.getSuccessRate().doubleValue(), successRateThreshold, EPSILON) >= 0) {
             return Decision.OK;
         }
         return Decision.FATAL;
@@ -66,19 +73,20 @@ public class DefaultSessionStatusDecisionMaker implements SessionStatusDecisionM
         this.description = description;
     }
 
-    public static Configurator getConfigurator() {
-        return Configurator.configuratorInstance;
+    public double getSuccessRateThreshold() {
+        return successRateThreshold;
     }
 
-    public static class Configurator {
-        private static final Configurator configuratorInstance = new Configurator();
-
-        private Configurator() {}
-
-        public void setSuccessRateThreshold(double successRateThreshold) {
-            log.info("setting successRateThreshold= {}", successRateThreshold);
-            DefaultSessionStatusDecisionMaker.successRateThreshold = successRateThreshold;
-        }
+    @Required
+    public void setSuccessRateThreshold(double successRateThreshold) {
+        log.info("setting successRateThreshold= {}", successRateThreshold);
+        this.successRateThreshold = successRateThreshold;
     }
+
+    @Required
+    public void setDoNotUseDeprecatedMethodToSetTestStatus(boolean doNotUseDeprecatedMethodToSetTestStatus) {
+        this.doNotUseDeprecatedMethodToSetTestStatus = doNotUseDeprecatedMethodToSetTestStatus;
+    }
+
 }
 

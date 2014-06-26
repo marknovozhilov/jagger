@@ -411,8 +411,8 @@ public class Trends extends DefaultActivity {
      * fields that contain gid/plot information
      * to provide rendering in time of choosing special tab(mainTab) to avoid view problems
      */
-    private Map<MetricNode, List<MetricDto>> chosenMetrics = new HashMap<MetricNode, List<MetricDto>>();
-    private Map<MetricNode, PlotSeriesDto> chosenPlots = new HashMap<MetricNode, PlotSeriesDto>();
+    private HashMap<MetricNode, SummaryIntegratedDto> chosenMetrics = new HashMap<MetricNode, SummaryIntegratedDto>();
+    private Map<MetricNode, PlotIntegratedDto> chosenPlots = new HashMap<MetricNode, PlotIntegratedDto>();
 
     /**
      * Field to hold number of sessions that were chosen.
@@ -735,7 +735,7 @@ public class Trends extends DefaultActivity {
         mainTabPanel.forceLayout();
         controlTree.onSummaryTrendsTab();
         if (!chosenMetrics.isEmpty() && hasChanged) {
-            for(Map.Entry<MetricNode, List<MetricDto>> entry : chosenMetrics.entrySet()) {
+            for(Map.Entry<MetricNode, SummaryIntegratedDto> entry : chosenMetrics.entrySet()) {
 
                 String plotId = entry.getKey().getId();
                 if (plotTrendsPanel.containsElementWithId(plotId)) {
@@ -743,28 +743,10 @@ public class Trends extends DefaultActivity {
                     continue;
                 }
 
-                List<PlotDatasetDto> plotDatasets = new ArrayList<PlotDatasetDto>(entry.getValue().size());
-                List<MetricDto> metricDtos = entry.getValue();
-                if (metricDtos == null || metricDtos.isEmpty()) {
-                    new ExceptionPanel("No trend plot found for " + entry.getKey().getDisplayName());
-                    continue;
-                }
-                // sort trends plots
-                MetricRankingProvider.sortMetrics(metricDtos);
-
-                String plotHeader = metricDtos.get(0).getMetricName().getTest().getTaskName() + ", " +
-                        entry.getKey().getDisplayName();
-
-                for (MetricDto metricDto : metricDtos) {
-                    plotDatasets.add(metricDto.getPlotDatasetDto());
-                }
-
-                PlotSeriesDto plotSeriesDto = new PlotSeriesDto(plotDatasets, "Sessions", "", plotHeader);
-
                 renderPlots(
                         plotTrendsPanel,
                         entry.getKey(),
-                        plotSeriesDto,
+                        entry.getValue().getPlotIntegratedDto(),
                         plotId,
                         true
                 );
@@ -1033,11 +1015,11 @@ public class Trends extends DefaultActivity {
         });
     }
 
-    private void renderPlots(PlotsPanel panel, MetricNode metricNode, PlotSeriesDto plotSeriesDto, String id) {
+    private void renderPlots(PlotsPanel panel, MetricNode metricNode, PlotIntegratedDto plotSeriesDto, String id) {
         renderPlots(panel, metricNode, plotSeriesDto, id, false);
     }
 
-    private void renderPlots(final PlotsPanel panel, MetricNode metricNode, PlotSeriesDto plotSeriesDto, String id, boolean isTrend) {
+    private void renderPlots(final PlotsPanel panel, MetricNode metricNode, PlotIntegratedDto plotSeriesDto, String id, boolean isTrend) {
 
         Markings markings = null;
         if (plotSeriesDto.getMarkingSeries() != null) {
@@ -1056,7 +1038,7 @@ public class Trends extends DefaultActivity {
             // Trends plot panel
 
             List<Integer> sessionIds = new ArrayList<Integer>();
-            for (PlotDatasetDto plotDatasetDto : plotSeriesDto.getPlotSeries()) {
+            for (PlotSingleDto plotDatasetDto : plotSeriesDto.getPlotSeries()) {
                 // find all sessions in plot
                 for (PointDto pointDto : plotDatasetDto.getPlotData()) {
                     int sId = (int)pointDto.getX();
@@ -1069,7 +1051,7 @@ public class Trends extends DefaultActivity {
             double yMinimum = getMinY(plotSeriesDto);
             plot = createPlot(panel, id, markings, plotSeriesDto.getXAxisLabel(), yMinimum, true, sessionIds);
             plotModel = plot.getModel();
-            for (PlotDatasetDto plotDatasetDto : plotSeriesDto.getPlotSeries()) {
+            for (PlotSingleDto plotDatasetDto : plotSeriesDto.getPlotSeries()) {
                 Series se = Series.create().setLabel(plotDatasetDto.getLegend()).setColor(plotDatasetDto.getColor());
                 SeriesHandler handler = plotModel.addSeries(se);
                 // Populate plot with data
@@ -1082,7 +1064,7 @@ public class Trends extends DefaultActivity {
 
             plot = createPlot(panel, id, markings, plotSeriesDto.getXAxisLabel(), null, false, null);
             plotModel = plot.getModel();
-            for (PlotDatasetDto plotDatasetDto : plotSeriesDto.getPlotSeries()) {
+            for (PlotSingleDto plotDatasetDto : plotSeriesDto.getPlotSeries()) {
                 Series se = Series.create().setLabel(plotDatasetDto.getLegend()).setColor(plotDatasetDto.getColor());
                 SeriesHandler handler = plotModel.addSeries(se);
                 // Populate plot with data
@@ -1569,7 +1551,7 @@ public class Trends extends DefaultActivity {
             } else {
 
                 final Set<MetricNode> notLoaded = new HashSet<MetricNode>();
-                final Map<MetricNode, List<MetricDto>> loaded = new HashMap<MetricNode, List<MetricDto>>();
+                final Map<MetricNode, SummaryIntegratedDto> loaded = new HashMap<MetricNode, SummaryIntegratedDto>();
 
                 for (MetricNode metricNode : metrics){
                     if (!summaryPanel.getCachedMetrics().containsKey(metricNode)){
@@ -1585,12 +1567,12 @@ public class Trends extends DefaultActivity {
                     selectedMetricsIds.add(metricNode.getId());
                 }
 
-                List<MetricDto> toRemoveFromTable = new ArrayList<MetricDto>();
+                List<SummaryIntegratedDto> toRemoveFromTable = new ArrayList<SummaryIntegratedDto>();
                 // Remove plots from display which were unchecked
                 Set<MetricNode> metricIdsSet = new HashSet<MetricNode>(chosenMetrics.keySet());
                 for (MetricNode metricNode : metricIdsSet) {
                     if (!selectedMetricsIds.contains(metricNode.getId())) {
-                        toRemoveFromTable.addAll(chosenMetrics.get(metricNode));
+                        toRemoveFromTable.add(chosenMetrics.get(metricNode));
                         chosenMetrics.remove(metricNode);
                         plotTrendsPanel.removeByMetricNode(metricNode);
                     }
@@ -1600,7 +1582,7 @@ public class Trends extends DefaultActivity {
 
                 if (!notLoaded.isEmpty()) {
                     disableControl();
-                    MetricDataService.Async.getInstance().getMetrics(notLoaded, new AsyncCallback<Map<MetricNode, List<MetricDto>>>() {
+                    MetricDataService.Async.getInstance().getMetrics(notLoaded, new AsyncCallback<Map<MetricNode, SummaryIntegratedDto>>() {
                         @Override
                         public void onFailure(Throwable caught) {
                             caught.printStackTrace();
@@ -1610,7 +1592,7 @@ public class Trends extends DefaultActivity {
                         }
 
                         @Override
-                        public void onSuccess(Map<MetricNode, List<MetricDto>> result) {
+                        public void onSuccess(Map<MetricNode, SummaryIntegratedDto> result) {
                             loaded.putAll(result);
                             renderMetrics(loaded);
                             if (enableTree)
@@ -1623,13 +1605,13 @@ public class Trends extends DefaultActivity {
             }
         }
 
-        private void renderMetrics(Map<MetricNode,List<MetricDto>> loaded) {
+        private void renderMetrics(Map<MetricNode, SummaryIntegratedDto> loaded) {
             summaryPanel.getSessionComparisonPanel().addMetricRecords(loaded);
             renderMetricPlots(loaded);
             summaryPanelScrollPanel.scrollToBottom();
         }
 
-        private void renderMetricPlots(Map<MetricNode, List<MetricDto>> result) {
+        private void renderMetricPlots(Map<MetricNode, SummaryIntegratedDto> result) {
             for (MetricNode metricNode : result.keySet()) {
 
                 if (!chosenMetrics.containsKey(metricNode)) {
@@ -1655,7 +1637,7 @@ public class Trends extends DefaultActivity {
             } else {
                 disableControl();
 
-                PlotProviderService.Async.getInstance().getPlotData(selectedNodes, new AsyncCallback<Map<MetricNode, PlotSeriesDto>>() {
+                PlotProviderService.Async.getInstance().getPlotData(selectedNodes, new AsyncCallback<Map<MetricNode, PlotIntegratedDto>>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
@@ -1666,7 +1648,7 @@ public class Trends extends DefaultActivity {
                     }
 
                     @Override
-                    public void onSuccess(Map<MetricNode, PlotSeriesDto> result) {
+                    public void onSuccess(Map<MetricNode, PlotIntegratedDto> result) {
                         for (MetricNode metricNode : result.keySet()) {
 
                             // DOM id for plot = metricNode.Id - is unique key
@@ -1851,9 +1833,9 @@ public class Trends extends DefaultActivity {
         return str;
     }
 
-    private double getMinY(PlotSeriesDto plotSeriesDto) {
+    private double getMinY(PlotIntegratedDto plotSeriesDto) {
         double yMin = Double.MAX_VALUE;
-        for (PlotDatasetDto plotDatasetDto : plotSeriesDto.getPlotSeries()) {
+        for (PlotSingleDto plotDatasetDto : plotSeriesDto.getPlotSeries()) {
             for (PointDto point : plotDatasetDto.getPlotData()) {
                 if (yMin > point.getY()) {
                     yMin = point.getY();
@@ -1862,4 +1844,5 @@ public class Trends extends DefaultActivity {
         }
         return yMin;
     }
+        
 }

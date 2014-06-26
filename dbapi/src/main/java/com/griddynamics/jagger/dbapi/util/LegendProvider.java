@@ -2,79 +2,85 @@ package com.griddynamics.jagger.dbapi.util;
 
 import com.griddynamics.jagger.dbapi.model.NameTokens;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
-import java.util.Set;
-
 /**
+ * Class contains methods to create legends for metric`s curves and plot headers for plots.
+ *
  * @author "Artem Kirillov" (akirillov@griddynamics.com)
  * @since 5/31/12
  */
 public class LegendProvider {
-    private EntityManager entityManager;
+
+    private static final String SESSION_PREFIX = "#";
+    private static final String LEGEND_DESCRIPTION_SEPARATOR = ": ";
 
     public LegendProvider() {
     }
 
-    @PersistenceContext
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    public String getPlotHeader(Set<Long> taskIds, String plotName) {
-        @SuppressWarnings("unchecked")
-        List<String> sessionList = (List<String>) entityManager.createQuery("select distinct td.sessionId from TaskData as td where td.id in (:taskIds)").
-                setParameter("taskIds", taskIds).getResultList();
-
-        String taskName = (String) entityManager.createQuery("select td.taskName from TaskData as td where td.id=(:taskId)")
-                .setParameter("taskId", taskIds.iterator().next())
-                .getSingleResult();
-
-        return generatePlotHeader(sessionList, taskName, plotName);
-    }
-
-    public String getSessionScopePlotHeader(String plotName) {
-        return NameTokens.SESSION_SCOPE_PLOTS + ", " + plotName;
-    }
-
-
+    /**
+     * Creates legend for curve(single metric).
+     *
+     * @param sessionId session id
+     * @param description description of metric (displayName)
+     * @param addSessionPrefix defines whether adds session prefix or not.@n
+     *                         For example trends do not need session prefix
+     * @return legend for single metric
+     */
     public String generatePlotLegend(String sessionId, String description, boolean addSessionPrefix) {
         if (!addSessionPrefix) {
             return description;
         }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("#").append(sessionId).append(": ").append(description);
-
-        return builder.toString();
+        return SESSION_PREFIX + sessionId + LEGEND_DESCRIPTION_SEPARATOR + description;
     }
 
-    //============================
-    //===========Auxiliary Methods
-    //============================
+    /**
+     * Creates plot header for the plot
+     *
+     * @param taskName name of task
+     * @param plotName displayName of PlotNode for witch plot plot-header should be created
+     * @return plot header of the plot
+     */
+    public String generatePlotHeader(String taskName, String plotName) {
 
-    private String generatePlotHeader(String sessionId, String taskName, String plotName) {
-        StringBuilder builder = new StringBuilder();
-        builder
-                .append(taskName)
-                .append(", ")
-                .append(plotName);
-
-        return builder.toString();
+        return taskName + ", " + plotName;
     }
 
-    private String generatePlotHeader(List<String> sessionIds, String taskName, String plotName) {
-        if (sessionIds == null || sessionIds.isEmpty()) {
-            return plotName;
+
+    /**
+     * Creates plot header for the session scope plot
+     *
+     * @param plotName displayName of PlotNode for witch plot plot-header should be created
+     * @return plot header of the session scope plot
+     */
+    public String generateSessionScopePlotHeader(String plotName) {
+
+        return NameTokens.SESSION_SCOPE_PLOTS + ", " + plotName;
+    }
+    
+
+    /**
+     * Get metric description(displayName) from legend
+     *
+     * @param legend legend string
+     * @return metric description(displayName)
+     */
+    public static String parseMetricName(String legend) {
+        if (legend.startsWith(SESSION_PREFIX)) {
+            return legend.substring(legend.indexOf(LEGEND_DESCRIPTION_SEPARATOR) + LEGEND_DESCRIPTION_SEPARATOR.length());
         }
+        return legend;
+    }
 
-        StringBuilder builder = new StringBuilder();
-        builder
-                .append(taskName)
-                .append(", ")
-                .append(plotName);
-
-        return builder.toString();
+    /**
+     * Get session id from legend
+     *
+     * @param legend legend string
+     * @return session id
+     */
+    public static String parseSessionId(String legend) {
+        if (legend.startsWith(SESSION_PREFIX)) {
+            return legend.substring(legend.indexOf(SESSION_PREFIX), legend.indexOf(LEGEND_DESCRIPTION_SEPARATOR));
+        }
+        return "";
     }
 }

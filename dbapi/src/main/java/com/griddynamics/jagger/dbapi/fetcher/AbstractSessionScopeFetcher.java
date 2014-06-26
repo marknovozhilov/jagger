@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
-import com.griddynamics.jagger.dbapi.dto.PlotDatasetDto;
+import com.griddynamics.jagger.dbapi.dto.PlotSingleDto;
 import com.griddynamics.jagger.dbapi.dto.TestInfoDto;
 import com.griddynamics.jagger.dbapi.util.FetchUtil;
 import com.griddynamics.jagger.util.Pair;
@@ -40,7 +40,7 @@ public class AbstractSessionScopeFetcher<F extends AbstractMetricPlotFetcher> ex
     }
 
     @Override
-    protected Set<Pair<MetricNameDto, List<PlotDatasetDto>>> fetchData(List<MetricNameDto> metricNames) {
+    protected Set<Pair<MetricNameDto, List<PlotSingleDto>>> fetchData(List<MetricNameDto> metricNames) {
         if (metricNames.isEmpty()) {
             return Collections.emptySet();
         }
@@ -55,7 +55,7 @@ public class AbstractSessionScopeFetcher<F extends AbstractMetricPlotFetcher> ex
     }
 
 
-    protected Set<Pair<MetricNameDto, List<PlotDatasetDto>>> getResult(Collection<AbstractMetricPlotFetcher.MetricRawData> allRawData, List<MetricNameDto> metricNames) {
+    protected Set<Pair<MetricNameDto, List<PlotSingleDto>>> getResult(Collection<AbstractMetricPlotFetcher.MetricRawData> allRawData, List<MetricNameDto> metricNames) {
 
         Set<Long> taskIds = new HashSet<Long>();
         for (MetricNameDto metricName : metricNames) {
@@ -64,7 +64,7 @@ public class AbstractSessionScopeFetcher<F extends AbstractMetricPlotFetcher> ex
 
         Multimap<String, AbstractMetricPlotFetcher.MetricRawData> metricIdRawMap = getMetricIdRawMap(allRawData, taskIds);
 
-        Multimap<MetricNameDto, PlotDatasetDto> metricNamePlotMap = ArrayListMultimap.create();
+        Multimap<MetricNameDto, PlotSingleDto> metricNamePlotMap = ArrayListMultimap.create();
         for (MetricNameDto metricName : metricNames) {
             Collection<AbstractMetricPlotFetcher.MetricRawData> rawDatas;
 
@@ -78,10 +78,10 @@ public class AbstractSessionScopeFetcher<F extends AbstractMetricPlotFetcher> ex
             metricNamePlotMap.put(metricName, abstractMetricPlotFetcher.assemble(metricName, rawDatas));
         }
 
-        Set<Pair<MetricNameDto, List<PlotDatasetDto>>> resultSet = new HashSet<Pair<MetricNameDto, List<PlotDatasetDto>>>(metricNames.size());
+        Set<Pair<MetricNameDto, List<PlotSingleDto>>> resultSet = new HashSet<Pair<MetricNameDto, List<PlotSingleDto>>>(metricNames.size());
 
         for (MetricNameDto metricName : metricNamePlotMap.keySet()) {
-            List<PlotDatasetDto> plotDatasetDtoList = new ArrayList<PlotDatasetDto>(metricNamePlotMap.get(metricName));
+            List<PlotSingleDto> plotDatasetDtoList = new ArrayList<PlotSingleDto>(metricNamePlotMap.get(metricName));
             resultSet.add(Pair.of(
                     metricName,
                     plotDatasetDtoList

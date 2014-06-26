@@ -32,8 +32,9 @@
         <resource>src/main/resources/suite/provider/fileprovider.conf.xml</resource>
         <resource>src/main/resources/suite/validator/resources/response.txt</resource>
         <resource>src/main/resources/suite/collectors.conf.xml</resource>
+        <resource>src/main/resources/suite/limits.conf.xml</resource>
         <resource>src/main/resources/suite/listeners.conf.xml</resource>
-        <resource>src/main/resources/suite/defaults.config.xml</resource>
+        <resource>src/main/resources/suite/defaults.conf.xml</resource>
         <resource>src/main/resources/suite/suite.conf.xml</resource>
         <resource>src/main/resources/suite/test.description.conf.xml</resource>
         <resource>assembly-config.xml</resource>

@@ -1,17 +1,17 @@
 package com.griddynamics.jagger.dbapi.fetcher;
 
-import com.griddynamics.jagger.dbapi.dto.MetricDto;
+import com.griddynamics.jagger.dbapi.dto.SummaryMetricValueDto;
+import com.griddynamics.jagger.dbapi.dto.SummarySingleDto;
 import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
-import com.griddynamics.jagger.dbapi.dto.MetricValueDto;
 import com.griddynamics.jagger.dbapi.util.MetricNameUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
-public class ValidatorSummaryFetcher extends SummaryDbMetricDataFetcher {
+public class ValidatorSummaryFetcher extends DbMetricDataFetcher<SummarySingleDto> {
     @Override
-    protected Set<MetricDto> fetchData(List<MetricNameDto> metricNames) {
+    protected Set<SummarySingleDto> fetchData(List<MetricNameDto> metricNames) {
 
         if (metricNames.isEmpty()) {
             return Collections.EMPTY_SET;
@@ -40,7 +40,7 @@ public class ValidatorSummaryFetcher extends SummaryDbMetricDataFetcher {
         }
 
         Map<Long, Map<String, MetricNameDto>> mappedMetricDtos = MetricNameUtil.getMappedMetricDtos(metricNames);
-        Map<MetricNameDto, MetricDto> resultMap = new HashMap<MetricNameDto, MetricDto>();
+        Map<MetricNameDto, SummarySingleDto> resultMap = new HashMap<MetricNameDto, SummarySingleDto>();
 
         for (Object[] mas : validators){
 
@@ -57,19 +57,19 @@ public class ValidatorSummaryFetcher extends SummaryDbMetricDataFetcher {
             }
 
             if (!resultMap.containsKey(metricNameDto)) {
-                MetricDto metricDto = new MetricDto();
+                SummarySingleDto metricDto = new SummarySingleDto();
                 metricDto.setMetricName(metricNameDto);
-                metricDto.setValues(new HashSet<MetricValueDto>());
+                metricDto.setValues(new HashSet<SummaryMetricValueDto>());
                 resultMap.put(metricNameDto, metricDto);
             }
 
-            MetricDto metricDto = resultMap.get(metricNameDto);
+            SummarySingleDto metricDto = resultMap.get(metricNameDto);
 
             Integer total = (Integer)mas[1];
             Integer failed = (Integer)mas[2];
 
             if (total == null || failed == null) continue;
-            MetricValueDto value = new MetricValueDto();
+            SummaryMetricValueDto value = new SummaryMetricValueDto();
 
             BigDecimal percentage = BigDecimal.ZERO;
 
@@ -83,11 +83,6 @@ public class ValidatorSummaryFetcher extends SummaryDbMetricDataFetcher {
             metricDto.getValues().add(value);
         }
 
-
-        for (MetricDto metricDto: resultMap.values()) {
-            metricDto.setPlotDatasetDto(generatePlotDatasetDto(metricDto));
-        }
-
-        return new HashSet<MetricDto>(resultMap.values());
+        return new HashSet<SummarySingleDto>(resultMap.values());
     }
 }

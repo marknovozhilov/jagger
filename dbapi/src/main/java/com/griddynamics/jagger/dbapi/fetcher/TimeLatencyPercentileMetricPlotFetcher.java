@@ -1,7 +1,7 @@
 package com.griddynamics.jagger.dbapi.fetcher;
 
+import com.griddynamics.jagger.dbapi.dto.PlotSingleDto;
 import com.griddynamics.jagger.dbapi.util.ColorCodeGenerator;
-import com.griddynamics.jagger.dbapi.dto.PlotDatasetDto;
 import com.griddynamics.jagger.dbapi.dto.PointDto;
 import com.griddynamics.jagger.dbapi.parameter.DefaultWorkloadParameters;
 import com.griddynamics.jagger.dbapi.util.DataProcessingUtil;
@@ -11,9 +11,9 @@ import java.util.*;
 public class TimeLatencyPercentileMetricPlotFetcher extends StandardMetricPlotFetcher<TimeLatencyPercentileMetricPlotFetcher.LatencyPercentileRawData> {
 
     @Override
-    protected Iterable<? extends PlotDatasetDto> assemble(Collection<LatencyPercentileRawData> rawData) {
+    protected Iterable<? extends PlotSingleDto> assemble(Collection<LatencyPercentileRawData> rawData) {
 
-        List<PlotDatasetDto> plotDatasetDtoList = new ArrayList<PlotDatasetDto>();
+        List<PlotSingleDto> plotDatasetDtoList = new ArrayList<PlotSingleDto>();
         Map<Double, List<PointDto>> percentiles = new TreeMap<Double, List<PointDto>>();
 
         String sessionId = rawData.iterator().next().getSessionId();
@@ -31,12 +31,12 @@ public class TimeLatencyPercentileMetricPlotFetcher extends StandardMetricPlotFe
 
             previousPercentileValue = y;
         }
-
+        int colorId = 0;
         for (Map.Entry<Double, List<PointDto>> entry : percentiles.entrySet()) {
             DefaultWorkloadParameters parameter = DefaultWorkloadParameters.fromDescription(entry.getKey().toString());
             String description = (parameter == null ? entry.getKey().toString() : parameter.getDescription());
             String legend = legendProvider.generatePlotLegend(sessionId, description, true);
-            plotDatasetDtoList.add(new PlotDatasetDto(entry.getValue(), legend, ColorCodeGenerator.getHexColorCode()));
+            plotDatasetDtoList.add(new PlotSingleDto(entry.getValue(), legend, ColorCodeGenerator.getHexColorCode(String.valueOf(colorId++), sessionId)));
         }
 
         return plotDatasetDtoList;

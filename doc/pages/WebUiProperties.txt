@@ -1,4 +1,6 @@
 /// @page WebUiProperties WebUi properties
+/// @brief Section describes jagger Web client properties @n
+/// @details
 /// @n
 /// Back to @ref WebUiMain @n
 /// @n

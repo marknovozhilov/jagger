@@ -46,7 +46,7 @@ public class MetricPlotsReporter extends AbstractMappedReportProvider<String> {
     private Logger log = LoggerFactory.getLogger(MetricPlotsReporter.class);
 
     private Map<Long, MetricPlotDTOs> plots;
-    private Map<MetricNode, PlotSeriesDto> plotsReal = Collections.EMPTY_MAP;
+    private Map<MetricNode, PlotIntegratedDto> plotsReal = Collections.emptyMap();
 
     private String sessionId;
     private DatabaseService databaseService;
@@ -175,9 +175,9 @@ public class MetricPlotsReporter extends AbstractMappedReportProvider<String> {
 
     }
 
-    public static JCommonDrawableRenderer makePlot(PlotSeriesDto plotSeriesDto) {
+    public static JCommonDrawableRenderer makePlot(PlotIntegratedDto plotIntegratedDto) {
         XYSeriesCollection plotCollection = new XYSeriesCollection();
-        for (PlotDatasetDto datasetDto : plotSeriesDto.getPlotSeries()) {
+        for (PlotSingleDto datasetDto : plotIntegratedDto.getPlotSeries()) {
             XYSeries plotEntry = new XYSeries(datasetDto.getLegend());
             for (PointDto point : datasetDto.getPlotData()) {                            // draw one line
                 plotEntry.add(point.getX(), point.getY());

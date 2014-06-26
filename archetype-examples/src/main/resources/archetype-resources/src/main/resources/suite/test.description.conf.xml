@@ -33,7 +33,7 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd"
         >
 
-    <beans:import resource="defaults.config.xml"/>
+    <beans:import resource="defaults.conf.xml"/>
     <beans:import resource="invokers/invokers.conf.xml"/>
 
     <!--This xml file will contain description of your tests-->

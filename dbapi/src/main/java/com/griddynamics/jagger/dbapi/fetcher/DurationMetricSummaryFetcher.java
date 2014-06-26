@@ -1,8 +1,8 @@
 package com.griddynamics.jagger.dbapi.fetcher;
 
-import com.griddynamics.jagger.dbapi.dto.MetricDto;
+import com.griddynamics.jagger.dbapi.dto.SummaryMetricValueDto;
+import com.griddynamics.jagger.dbapi.dto.SummarySingleDto;
 import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
-import com.griddynamics.jagger.dbapi.dto.MetricValueDto;
 import com.griddynamics.jagger.dbapi.util.MetricNameUtil;
 import com.griddynamics.jagger.util.StandardMetricsNamesUtil;
 import com.griddynamics.jagger.util.TimeUtils;
@@ -10,10 +10,10 @@ import com.griddynamics.jagger.util.TimeUtils;
 import java.math.BigInteger;
 import java.util.*;
 
-public class DurationMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
+public class DurationMetricSummaryFetcher extends DbMetricDataFetcher<SummarySingleDto> {
 
     @Override
-    protected Set<MetricDto> fetchData(List<MetricNameDto> durationMetricNames) {
+    protected Set<SummarySingleDto> fetchData(List<MetricNameDto> durationMetricNames) {
         if (durationMetricNames.isEmpty()) {
             return Collections.EMPTY_SET;
         }
@@ -39,11 +39,11 @@ public class DurationMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
         return processDurationDataFromDatabase(result, durationMetricNames);
     }
 
-    private Set<MetricDto> processDurationDataFromDatabase(List<Object[]> rawData, List<MetricNameDto> durationMetricNames) {
+    private Set<SummarySingleDto> processDurationDataFromDatabase(List<Object[]> rawData, List<MetricNameDto> durationMetricNames) {
 
         Map<Long, Map<String, MetricNameDto>> mappedMetricDtos = MetricNameUtil.getMappedMetricDtos(durationMetricNames);
 
-        Map<MetricNameDto, MetricDto> resultMap = new HashMap<MetricNameDto, MetricDto>();
+        Map<MetricNameDto, SummarySingleDto> resultMap = new HashMap<MetricNameDto, SummarySingleDto>();
 
         for (Object[] entry : rawData) {
             BigInteger taskId = (BigInteger) entry[3];
@@ -57,15 +57,15 @@ public class DurationMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
             }
 
             if (!resultMap.containsKey(metricNameDto)) {
-                MetricDto metricDto = new MetricDto();
+                SummarySingleDto metricDto = new SummarySingleDto();
                 metricDto.setMetricName(metricNameDto);
-                metricDto.setValues(new HashSet<MetricValueDto>());
+                metricDto.setValues(new HashSet<SummaryMetricValueDto>());
                 resultMap.put(metricNameDto, metricDto);
             }
 
-            MetricDto metricDto = resultMap.get(metricNameDto);
+            SummarySingleDto metricDto = resultMap.get(metricNameDto);
 
-            MetricValueDto value = new MetricValueDto();
+            SummaryMetricValueDto value = new SummaryMetricValueDto();
             Date[] date = new Date[2];
             date[0] = (Date)entry [1];
             date[1] = (Date)entry [2];
@@ -75,10 +75,6 @@ public class DurationMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
             metricDto.getValues().add(value);
         }
 
-        for (MetricDto md : resultMap.values()) {
-            md.setPlotDatasetDto(generatePlotDatasetDto(md));
-        }
-
-        return new HashSet<MetricDto>(resultMap.values());
+        return new HashSet<SummarySingleDto>(resultMap.values());
     }
 }

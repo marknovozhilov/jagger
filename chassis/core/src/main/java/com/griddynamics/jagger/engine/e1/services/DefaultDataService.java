@@ -313,20 +313,20 @@ public class DefaultDataService implements DataService {
     @Override
     public Map<MetricEntity, MetricSummaryValueEntity> getMetricSummary(Collection<MetricEntity> metrics) {
 
-        List<MetricNameDto> metricNameDtoList = new ArrayList<MetricNameDto>();
+        Set<MetricNameDto> metricNameDtoSet = new HashSet<MetricNameDto>();
         Map<MetricNameDto,MetricEntity> matchMap = new HashMap<MetricNameDto, MetricEntity>();
 
         for (MetricEntity metric : metrics) {
             if (metric.isSummaryAvailable()) {
-                metricNameDtoList.add(metric.getMetricNameDto());
+                metricNameDtoSet.add(metric.getMetricNameDto());
                 matchMap.put(metric.getMetricNameDto(),metric);
             }
         }
 
-        List<MetricDto> metricDtoList = databaseService.getSummaryByMetricNameDto(metricNameDtoList);
+        Collection<SummarySingleDto> metricDtoList = databaseService.getSummaryByMetricNameDto(metricNameDtoSet).values();
 
         Map<MetricEntity,MetricSummaryValueEntity> result = new HashMap<MetricEntity,MetricSummaryValueEntity>();
-        for (MetricDto metricDto : metricDtoList) {
+        for (SummarySingleDto metricDto : metricDtoList) {
             MetricEntity metricEntity = matchMap.get(metricDto.getMetricName());
             MetricSummaryValueEntity value = new MetricSummaryValueEntity();
             value.setValue(Double.parseDouble(metricDto.getValues().iterator().next().getValue()));
@@ -356,10 +356,10 @@ public class DefaultDataService implements DataService {
             }
         }
 
-        Map<MetricNameDto,List<PlotDatasetDto>> resultMap = databaseService.getPlotDataByMetricNameDto(metricNameDtoSet);
+        Map<MetricNameDto,List<PlotSingleDto>> resultMap = databaseService.getPlotDataByMetricNameDto(metricNameDtoSet);
 
         Map<MetricEntity,List<MetricPlotPointEntity>> result = new HashMap<MetricEntity, List<MetricPlotPointEntity>>();
-        for (Map.Entry<MetricNameDto,List<PlotDatasetDto>> entry : resultMap.entrySet()) {
+        for (Map.Entry<MetricNameDto,List<PlotSingleDto>> entry : resultMap.entrySet()) {
             MetricEntity metricEntity = matchMap.get(entry.getKey());
             List<MetricPlotPointEntity> values = new ArrayList<MetricPlotPointEntity>();
             for (PointDto pointDto : entry.getValue().iterator().next().getPlotData()) {

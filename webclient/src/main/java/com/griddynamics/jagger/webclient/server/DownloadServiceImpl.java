@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.griddynamics.jagger.dbapi.csv.PlotToCsvGenerator;
 import com.griddynamics.jagger.dbapi.dto.*;
 import com.griddynamics.jagger.dbapi.model.MetricNode;
-import com.griddynamics.jagger.dbapi.model.MetricRankingProvider;
 import com.griddynamics.jagger.dbapi.model.PlotNode;
 import com.griddynamics.jagger.webclient.client.DownloadService;
 import com.griddynamics.jagger.webclient.client.MetricDataService;
@@ -46,38 +45,23 @@ public class DownloadServiceImpl implements DownloadService {
         try {
             // getPlotData :
             Set<MetricNode> metricNodeSet = Collections.singleton(metricNode);
-            PlotSeriesDto plot;
+            PlotIntegratedDto plot;
 
             if (metricNode instanceof PlotNode) {
                 // processing metric plots
 
-                Map<MetricNode, PlotSeriesDto> plotsMap = plotProviderService.getPlotData(metricNodeSet);
+                Map<MetricNode, PlotIntegratedDto> plotsMap = plotProviderService.getPlotData(metricNodeSet);
                 plot = plotsMap.get(metricNode);
             } else {
                 // processing trends plots
 
-                Map<MetricNode, List<MetricDto>> map = metricDataService.getMetrics(metricNodeSet);
+                Map<MetricNode, SummaryIntegratedDto> map = metricDataService.getMetrics(metricNodeSet);
 
-                List<MetricDto> metricDtos = map.get(metricNode);
-
-                if (metricDtos == null || metricDtos.isEmpty()) {
-                    throw new RuntimeException("No trend plot found for " + metricNode.getDisplayName());
+                SummaryIntegratedDto summaryInDto = map.get(metricNode);
+                if (summaryInDto == null) {
+                    throw new RuntimeException("could not find summary data for " + metricNode.toString());
                 }
-
-                List<PlotDatasetDto> plotDatasets = new ArrayList<PlotDatasetDto>(metricDtos.size());
-
-                // sort trends plots
-                MetricRankingProvider.sortMetrics(metricDtos);
-
-                String plotHeader = metricDtos.get(0).getMetricName().getTest().getTaskName() + ", " +
-                        metricNode.getDisplayName();
-
-                for (MetricDto metricDto : metricDtos) {
-                    plotDatasets.add(metricDto.getPlotDatasetDto());
-                }
-
-               plot = new PlotSeriesDto(plotDatasets, "Sessions", "", plotHeader);
-
+                plot = summaryInDto.getPlotIntegratedDto();
             }
 
             if (plot == null) {

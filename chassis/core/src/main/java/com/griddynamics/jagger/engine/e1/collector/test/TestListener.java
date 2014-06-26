@@ -123,7 +123,8 @@ public abstract class TestListener{
 /// Approach for implementation will be always the same like described below. @n
 /// @n
 /// To add custom listener (f.e. test suite listener) you need to do -
-/// 1. Create class which extends @ref com.griddynamics.jagger.engine.e1.services.ServicesAware "ServicesAware" and implements interface @ref Provider<T>
+/// 1. Create class which extends @ref com.griddynamics.jagger.engine.e1.services.ServicesAware "ServicesAware" and implements interface @ref Provider<T> @n
+/// Where @b T is listener type (all types: @ref Main_Listeners_Base_group)
 /// @dontinclude  ProviderOfTestSuiteListener.java
 /// @skipline  public class ProviderOfTestSuiteListener
 /// @n
@@ -140,7 +141,7 @@ public abstract class TestListener{
 /// @until end: following section is used for docu generation - invocation listener usage
 /// @n
 ///
-/// 3. Add @xlink_complex{listener-test-suite-ref} to @xlink{test-suite} block @n
+/// 3. Add reference to your listener to appropriate block of your XML schema @n
 /// in your configuration XML file and set id of listener to attribute @xlink_complex{listener-test-suite-ref,ref}.
 /// @dontinclude  suite.conf.xml
 /// @skip  begin: following section is used for docu generation - test suite listener usage
@@ -148,6 +149,7 @@ public abstract class TestListener{
 /// @n
 /// @xlink_complex{listener-test-suite-ref} belongs to @xlink{test-suite} block in XML @n
 /// @xlink_complex{listener-test-group-ref} belongs to @xlink{test-group} block in XML @n
+/// @xlink_complex{listener-test-group-decision-maker-ref} belongs to @xlink{test-group} block in XML @n
 /// @xlink_complex{listener-test-ref} belongs to @xlink{test} block in XML @n
 /// @xlink_complex{listener-invocation-ref} belongs to @xlink{test-description,info-collectors} block in XML @n
 /// @n

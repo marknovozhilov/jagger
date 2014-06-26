@@ -1,32 +1,48 @@
 package com.griddynamics.jagger.dbapi.dto;
 
+import com.griddynamics.jagger.dbapi.model.MetricGroupNode;
+import com.griddynamics.jagger.dbapi.model.LegendNode;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 
 /**
+ * Represents plot with multiple lines
+ * Refers to MetricNode
+ *
  * @author "Artem Kirillov" (akirillov@griddynamics.com)
  * @since 5/31/12
  */
-public class PlotSeriesDto implements Serializable {
-    private Collection<PlotDatasetDto> plotSeries = Collections.emptyList();
+public class PlotIntegratedDto implements Serializable {
+    private Collection<PlotSingleDto> plotSeries = Collections.emptyList();
     private Collection<MarkingDto> markingSeries = Collections.emptyList();
     private String xAxisLabel;
     private String yAxisLabel;
     private String plotHeader;
     private double yAxisMin;
 
-    public PlotSeriesDto() {
+    private MetricGroupNode<LegendNode> legendTree;
+
+    public MetricGroupNode<LegendNode> getLegendTree() {
+        return legendTree;
     }
 
-    public PlotSeriesDto(Collection<PlotDatasetDto> plotSeries, String xAxisLabel, String yAxisLabel, String plotHeader) {
+    public void setLegendTree(MetricGroupNode<LegendNode> legendTree) {
+        this.legendTree = legendTree;
+    }
+
+    public PlotIntegratedDto() {
+    }
+
+    public PlotIntegratedDto(Collection<PlotSingleDto> plotSeries, String xAxisLabel, String yAxisLabel, String plotHeader) {
         this.plotSeries = plotSeries;
         this.xAxisLabel = xAxisLabel;
         this.yAxisLabel = yAxisLabel;
         this.plotHeader = plotHeader;
     }
 
-    public PlotSeriesDto(Collection<PlotDatasetDto> plotSeries, String xAxisLabel, String yAxisLabel, String plotHeader, Collection<MarkingDto> markingSeries) {
+    public PlotIntegratedDto(Collection<PlotSingleDto> plotSeries, String xAxisLabel, String yAxisLabel, String plotHeader, Collection<MarkingDto> markingSeries) {
         this.plotSeries = plotSeries;
         this.xAxisLabel = xAxisLabel;
         this.yAxisLabel = yAxisLabel;
@@ -34,7 +50,7 @@ public class PlotSeriesDto implements Serializable {
         this.markingSeries = markingSeries;
     }
 
-    public Collection<PlotDatasetDto> getPlotSeries() {
+    public Collection<PlotSingleDto> getPlotSeries() {
         return plotSeries;
     }
 
@@ -64,7 +80,7 @@ public class PlotSeriesDto implements Serializable {
 
     @Override
     public String toString() {
-        return "PlotSeriesDto{" +
+        return "PlotIntegratedDto{" +
                 "plotSeries=" + plotSeries +
                 ", markingSeries=" + markingSeries +
                 ", xAxisLabel='" + xAxisLabel + '\'' +

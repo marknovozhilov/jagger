@@ -65,18 +65,21 @@ public interface Invoker<Q,R,E> extends Serializable {
 /// @li @ref Main_Test_Suite_Flow_group
 /// @li @ref Main_Test_Flow_group
 ///
-/// @li @ref Main_Aggregators_General_group @e @htmlonly <font color="#009900">NEW ver 1.2.4</font>@endhtmlonly
+/// @li @ref Main_Aggregators_General_group
 /// @li @ref Main_Collectors_General_group
 /// @li @ref Main_Distributors_General_group
 /// @li @ref Main_Listeners_General_group
 /// @li @ref Main_Providers_General_group
 /// @li @ref Main_Services_General_group
+/// @li @ref Main_Decision_Maker_General_group @e @htmlonly <font color="#009900">NEW ver 1.2.5</font>@endhtmlonly
 ///
 /// @li @ref Main_Custom_Components_group
 ///
-/// @li @ref Main_Properties_group @e @htmlonly <font color="#009900">NEW ver 1.2.4</font>@endhtmlonly
+/// @li @ref Main_Properties_group
 ///
-/// @li @ref WebUiMain @e @htmlonly <font color="#009900">NEW ver 1.2.4</font>@endhtmlonly
+/// @li @ref WebUiMain
+///
+/// @li @ref MonitoringMain @e @htmlonly <font color="#009900">NEW ver 1.2.5</font>@endhtmlonly
 ///
 /// @n
 /// @n
@@ -112,7 +115,6 @@ public interface Invoker<Q,R,E> extends Serializable {
 /// @li @ref Main_HowToCustomizeProviders_group
 /// @li @ref Main_HowToCustomizeDistributors_group
 /// @li @ref Main_HowToCustomizeCollectors_group
-/// @li @ref Main_HowToCustomizeDecisionMakers_group
 /// @li @ref Main_HowToCustomizeListeners_group
 
 /// @defgroup Main_Properties_group Jagger properties main page
@@ -191,5 +193,4 @@ public interface Invoker<Q,R,E> extends Serializable {
 /// @details @ref Main_Listeners_General_group
 /// @defgroup Main_Aggregators_group Implementations of aggregators
 /// @details @ref Main_Aggregators_General_group
-/// @defgroup Main_DecisionMakers_group Implementations of decision makers
 /// @defgroup Main_Terminators_group Implementations of termination strategies

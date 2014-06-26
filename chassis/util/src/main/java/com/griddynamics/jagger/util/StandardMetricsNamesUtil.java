@@ -37,6 +37,7 @@ public class StandardMetricsNamesUtil {
     public static final String TIME_LATENCY_PERCENTILE = "Time Latency Percentile";
     public static final String FAIL_COUNT = "Number of failures";
 
+    //begin: following section is used for docu generation - standard metrics ids
     public static final String THROUGHPUT_ID = "throughput";
     public static final String LATENCY_ID = "avgLatency";
     public static final String LATENCY_STD_DEV_ID = "stdDevLatency";
@@ -44,4 +45,5 @@ public class StandardMetricsNamesUtil {
     public static final String SUCCESS_RATE_ID = "successRate";
     public static final String DURATION_ID = "duration";
     public static final String ITERATION_SAMPLES_ID = "samples";
+    //end: following section is used for docu generation - standard metrics ids
 }

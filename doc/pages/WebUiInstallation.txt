@@ -1,4 +1,6 @@
 /// @page WebUiInstallation WebUi installation
+/// @brief Section describes installation of Jagger Web client @n
+/// @details
 /// @n
 /// Back to @ref WebUiMain @n
 /// @n
@@ -8,7 +10,7 @@
 /// I will show you how to launch jagger web client with [Apache Tomcat](http://tomcat.apache.org/) @n
 /// @n
 /// @li Download jagger war file from the next link - @n
-/// https://nexus.griddynamics.net/nexus/content/repositories/public/com/griddynamics/jagger/webclient/1.2.4/webclient-1.2.4.war @n
+/// https://nexus.griddynamics.net/nexus/content/repositories/public/com/griddynamics/jagger/webclient/1.2.5/webclient-1.2.5.war @n
 /// <b> @e Note: </b> Latest version number you can find in [Release notes](https://github.com/griddynamics/jagger/wiki/Jagger-Release-Notes#jagger-release-notes) @n
 /// @n
 /// @li Rename `webclient-X.X.X.war` file to `ROOT.war` @n
@@ -49,6 +51,10 @@
 /// @n
 /// @li Now open link `localhost:8080` in your favorite browser. Web client is ready for use!
 ///    @image html webUI_sessions.png "Compare sessions"
+/// @n
+/// @li @b Note: Web client will write logs to path defined in log properties `/ROOT/WEB-INF/classes/log4j.properties` @n
+///     By default logs will be stored in the same directory where Web client is installed. If you don't have permissions @n
+///     to write there - redefine path @n
 /// @n
 /// @n
 /// It is possible to store Web client properties file in separate file to simplify updating of Web Client. @ref WebUiProperties "[More ...]" @n

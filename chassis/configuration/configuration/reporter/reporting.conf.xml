@@ -34,10 +34,6 @@
         </property>
     </bean>
 
-    <bean id="defaultSessionStatusDecisionMaker" class="com.griddynamics.jagger.engine.e1.reporting.DefaultSessionStatusDecisionMaker" factory-method="getConfigurator">
-        <property name="successRateThreshold" value="${chassis.master.reporting.successrate.threshold}"/>
-    </bean>
-
     <alias name="sessionIdProviderReadOnly_${report.only}" alias="sessionIdProvider"/>
     <alias name="sessionIdProviderBean" alias="sessionIdProviderReadOnly_true"/>
     <alias name="sequenceSessionIdProvider" alias="sessionIdProviderReadOnly_false"/>
@@ -66,6 +62,8 @@
           class="com.griddynamics.jagger.engine.e1.reporting.DefaultSessionStatusDecisionMaker">
         <property name="description"
                   value="Status is based on success rate. Session status is a status of the worst test."/>
+        <property name="successRateThreshold" value="${chassis.master.reporting.successrate.threshold}"/>
+        <property name="doNotUseDeprecatedMethodToSetTestStatus" value="${chassis.decision.maker.with.limits.is.only.decision.maker}"/>
     </bean>
 
     <bean id="abstractReportProviderBean" class="com.griddynamics.jagger.reporting.AbstractReportProviderBean" abstract="true">
@@ -251,6 +249,7 @@
     <bean id="ruleProvider_TreeViewGroup" class="com.griddynamics.jagger.dbapi.model.rules.TreeViewGroupRuleProvider">
         <property name="monitoringPlotGroups" ref="monitoringPlotGroups"/>
     </bean>
+    <bean id="ruleProvider_LegendTreeViewGroup" class="com.griddynamics.jagger.dbapi.model.rules.LegendTreeViewGroupRuleProvider"/>
 
     <bean id="databaseService" class="com.griddynamics.jagger.dbapi.DatabaseServiceImpl">
         <property name="threadPool" ref="executorService"/>
@@ -266,6 +265,7 @@
         <property name="sessionInfoServiceImpl" ref="sessionInfoService"/>
 
         <property name="treeViewGroupRuleProvider" ref="ruleProvider_TreeViewGroup"/>
+        <property name="legendTreeViewGroupRuleProvider" ref="ruleProvider_LegendTreeViewGroup"/>
         <property name="treeViewGroupMetricsToNodeRuleProvider" ref="ruleProvider_TreeViewGroupMetricsToNode"/>
 
         <property name="legendProvider" ref="legendProvider"/>

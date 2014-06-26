@@ -1,7 +1,7 @@
 package com.griddynamics.jagger.dbapi.csv;
 
-import com.griddynamics.jagger.dbapi.dto.PlotDatasetDto;
-import com.griddynamics.jagger.dbapi.dto.PlotSeriesDto;
+import com.griddynamics.jagger.dbapi.dto.PlotIntegratedDto;
+import com.griddynamics.jagger.dbapi.dto.PlotSingleDto;
 import com.griddynamics.jagger.dbapi.dto.PointDto;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -20,9 +20,9 @@ public class PlotToCsvGenerator {
      * @param outputStream stream to write csv to
      * @throws IOException
      */
-    public static void generateCsvFile(PlotSeriesDto plot, OutputStream outputStream) throws IOException {
+    public static void generateCsvFile(PlotIntegratedDto plot, OutputStream outputStream) throws IOException {
 
-        Collection<PlotDatasetDto> curves = plot.getPlotSeries();
+        Collection<PlotSingleDto> curves = plot.getPlotSeries();
 
         OutputStreamWriter osw = new OutputStreamWriter(outputStream);
 
@@ -32,14 +32,14 @@ public class PlotToCsvGenerator {
             String[] header = new String[curves.size() + 1]; // one for xAxis label
             header[0] = plot.getXAxisLabel();
             int i = 1;
-            for (PlotDatasetDto curve : curves) {
+            for (PlotSingleDto curve : curves) {
                 header[i++] = curve.getLegend();
             }
 
             writer.writeHeader(header);
 
             i = 1; // first curve to first column
-            for (PlotDatasetDto curve : curves) {
+            for (PlotSingleDto curve : curves) {
 
                 for (PointDto point : curve.getPlotData()) {
                     Double[] raw = new Double[curves.size() + 1]; // one for xAxis label

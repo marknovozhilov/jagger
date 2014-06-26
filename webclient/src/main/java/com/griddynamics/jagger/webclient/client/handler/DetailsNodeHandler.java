@@ -1,7 +1,6 @@
 package com.griddynamics.jagger.webclient.client.handler;
 
 import com.griddynamics.jagger.dbapi.model.*;
-import com.griddynamics.jagger.dbapi.dto.SessionPlotNameDto;
 import com.sencha.gxt.widget.core.client.event.CheckChangeEvent;
 import com.sencha.gxt.widget.core.client.tree.Tree;
 
@@ -23,7 +22,10 @@ public class DetailsNodeHandler extends TreeAwareHandler<DetailsNode> {
             testScopePlotNames.addAll(test.getMetrics());
         }
         MetricGroupNode<PlotNode> sessionScopeNode = detailsNode.getSessionScopeNode();
-        testScopePlotNames.addAll(sessionScopeNode.getMetrics());
+        // null when multiple sessions selected
+        if (sessionScopeNode != null) {
+            testScopePlotNames.addAll(sessionScopeNode.getMetrics());
+        }
 
 
         if (Tree.CheckState.CHECKED.equals(event.getChecked())) {

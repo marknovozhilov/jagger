@@ -1,26 +1,26 @@
 package com.griddynamics.jagger.dbapi.fetcher;
 
-import com.griddynamics.jagger.dbapi.dto.MetricDto;
+import com.griddynamics.jagger.dbapi.dto.SummaryMetricValueDto;
+import com.griddynamics.jagger.dbapi.dto.SummarySingleDto;
 import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
-import com.griddynamics.jagger.dbapi.dto.MetricValueDto;
 import com.griddynamics.jagger.dbapi.entity.WorkloadTaskData;
 import com.griddynamics.jagger.util.StandardMetricsNamesUtil;
 
 import java.util.*;
 
-public class StandardMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
+public class StandardMetricSummaryFetcher extends DbMetricDataFetcher<SummarySingleDto> {
 
     @Override
-    protected Set<MetricDto> fetchData(List<MetricNameDto> standardMetricNames) {
+    protected Set<SummarySingleDto> fetchData(List<MetricNameDto> standardMetricNames) {
 
-        Set<MetricDto> resultSet = new HashSet<MetricDto>();
+        Set<SummarySingleDto> resultSet = new HashSet<SummarySingleDto>();
 
         resultSet.addAll(getRestMetrics(standardMetricNames));
 
         return resultSet;
     }
 
-    private Collection<? extends MetricDto> getRestMetrics(List<MetricNameDto> restMetricNames) {
+    private Collection<? extends SummarySingleDto> getRestMetrics(List<MetricNameDto> restMetricNames) {
 
         if (restMetricNames.isEmpty()) {
             return Collections.emptyList();
@@ -42,20 +42,20 @@ public class StandardMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
             return Collections.emptyList();
         }
 
-        Set<MetricDto> resultSet = new HashSet<MetricDto>();
+        Set<SummarySingleDto> resultSet = new HashSet<SummarySingleDto>();
         for (MetricNameDto metricName : restMetricNames) {
 
-            MetricDto metricDto = new MetricDto();
+            SummarySingleDto metricDto = new SummarySingleDto();
             resultSet.add(metricDto);
             metricDto.setMetricName(metricName);
-            metricDto.setValues(new HashSet<MetricValueDto>());
+            metricDto.setValues(new HashSet<SummaryMetricValueDto>());
             for (WorkloadTaskData workloadTaskData : workloadTaskDatas) {
 
                 // check if this WorkloadTaskData suit to given MetricNameDto
                 if (metricName.getTest().getTaskName().equals(workloadTaskData.getScenario().getName())
                         && metricName.getTest().getSessionIds().contains(workloadTaskData.getSessionId())) {
 
-                    MetricValueDto mvd = new MetricValueDto();
+                    SummaryMetricValueDto mvd = new SummaryMetricValueDto();
                     mvd.setSessionId(Long.parseLong(workloadTaskData.getSessionId()));
                     String metricId = metricName.getMetricName();
 
@@ -80,7 +80,6 @@ public class StandardMetricSummaryFetcher extends SummaryDbMetricDataFetcher {
                     }
                 }
             }
-            metricDto.setPlotDatasetDto(generatePlotDatasetDto(metricDto));
         }
 
         return resultSet;

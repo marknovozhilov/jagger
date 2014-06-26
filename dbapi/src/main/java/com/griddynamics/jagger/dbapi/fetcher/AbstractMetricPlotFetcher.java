@@ -2,9 +2,9 @@ package com.griddynamics.jagger.dbapi.fetcher;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.griddynamics.jagger.dbapi.dto.PlotSingleDto;
 import com.griddynamics.jagger.dbapi.util.ColorCodeGenerator;
 import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
-import com.griddynamics.jagger.dbapi.dto.PlotDatasetDto;
 import com.griddynamics.jagger.dbapi.dto.PointDto;
 import com.griddynamics.jagger.util.Pair;
 
@@ -19,7 +19,7 @@ import java.util.*;
 public abstract class AbstractMetricPlotFetcher extends PlotsDbMetricDataFetcher {
 
     @Override
-    protected Set<Pair<MetricNameDto, List<PlotDatasetDto>>> fetchData(List<MetricNameDto> metricNames) {
+    protected Set<Pair<MetricNameDto, List<PlotSingleDto>>> fetchData(List<MetricNameDto> metricNames) {
 
         if (metricNames.isEmpty()) {
             return Collections.emptySet();
@@ -34,7 +34,7 @@ public abstract class AbstractMetricPlotFetcher extends PlotsDbMetricDataFetcher
         return getResult(allRawData, metricNames);
     }
 
-    protected Set<Pair<MetricNameDto, List<PlotDatasetDto>>> getResult(Collection<MetricRawData> allRawData, List<MetricNameDto> metricNames) {
+    protected Set<Pair<MetricNameDto, List<PlotSingleDto>>> getResult(Collection<MetricRawData> allRawData, List<MetricNameDto> metricNames) {
 
         Map<Long, Multimap<String, MetricRawData>> taskIdMetricIdRawMap = createMappedPlotDatasets(metricNames);
 
@@ -44,7 +44,7 @@ public abstract class AbstractMetricPlotFetcher extends PlotsDbMetricDataFetcher
             taskIdMetricIdRawMap.get(taskId).put(metricId, rawData);
         }
 
-        Multimap<MetricNameDto, PlotDatasetDto> metricNamePlotMap = ArrayListMultimap.create();
+        Multimap<MetricNameDto, PlotSingleDto> metricNamePlotMap = ArrayListMultimap.create();
         for (MetricNameDto metricName : metricNames) {
             for (Long taskId : metricName.getTaskIds()) {
                 Collection<MetricRawData> rawDatas;
@@ -65,10 +65,10 @@ public abstract class AbstractMetricPlotFetcher extends PlotsDbMetricDataFetcher
             }
         }
 
-        Set<Pair<MetricNameDto, List<PlotDatasetDto>>> resultSet = new HashSet<Pair<MetricNameDto, List<PlotDatasetDto>>>(metricNames.size());
+        Set<Pair<MetricNameDto, List<PlotSingleDto>>> resultSet = new HashSet<Pair<MetricNameDto, List<PlotSingleDto>>>(metricNames.size());
 
         for (MetricNameDto metricName : metricNamePlotMap.keySet()) {
-            List<PlotDatasetDto> plotDatasetDtoList = new ArrayList<PlotDatasetDto>(metricNamePlotMap.get(metricName));
+            List<PlotSingleDto> plotDatasetDtoList = new ArrayList<PlotSingleDto>(metricNamePlotMap.get(metricName));
             resultSet.add(
                     Pair.of(
                             metricName,
@@ -79,7 +79,7 @@ public abstract class AbstractMetricPlotFetcher extends PlotsDbMetricDataFetcher
         return resultSet;
     }
 
-    protected PlotDatasetDto assemble(MetricNameDto metricNameDto, Collection<MetricRawData> rawDatas) {
+    protected PlotSingleDto assemble(MetricNameDto metricNameDto, Collection<MetricRawData> rawDatas) {
         List<PointDto> points = new ArrayList<PointDto>(rawDatas.size());
         String sessionId = null;
 
@@ -88,13 +88,13 @@ public abstract class AbstractMetricPlotFetcher extends PlotsDbMetricDataFetcher
             points.add(new PointDto(metricRawData.getTime() / 1000D, metricRawData.getValue()));
         }
 
-        return new PlotDatasetDto(
+        return new PlotSingleDto(
                 points,
                 legendProvider.generatePlotLegend(
                         sessionId,
                         metricNameDto.getMetricDisplayName(),
                         true),
-                ColorCodeGenerator.getHexColorCode());
+                ColorCodeGenerator.getHexColorCode(metricNameDto.getMetricName(), sessionId));
     }
 
 

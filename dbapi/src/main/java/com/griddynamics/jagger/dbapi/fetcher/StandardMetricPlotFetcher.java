@@ -3,7 +3,7 @@ package com.griddynamics.jagger.dbapi.fetcher;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
-import com.griddynamics.jagger.dbapi.dto.PlotDatasetDto;
+import com.griddynamics.jagger.dbapi.dto.PlotSingleDto;
 import com.griddynamics.jagger.dbapi.util.MetricNameUtil;
 import com.griddynamics.jagger.util.Pair;
 
@@ -12,12 +12,12 @@ import java.util.*;
 
 public abstract class StandardMetricPlotFetcher<T extends StandardMetricPlotFetcher.StandardMetricRawData> extends PlotsDbMetricDataFetcher {
     @Override
-    protected Set<Pair<MetricNameDto, List<PlotDatasetDto>>> fetchData(List<MetricNameDto> metricNames) {
+    protected Set<Pair<MetricNameDto, List<PlotSingleDto>>> fetchData(List<MetricNameDto> metricNames) {
         if (metricNames.isEmpty()) {
             return Collections.emptySet();
         }
 
-        Set<Pair<MetricNameDto, List<PlotDatasetDto>>> resultSet = new HashSet<Pair<MetricNameDto, List<PlotDatasetDto>>>(metricNames.size());
+        Set<Pair<MetricNameDto, List<PlotSingleDto>>> resultSet = new HashSet<Pair<MetricNameDto, List<PlotSingleDto>>>(metricNames.size());
         Set<Long> taskIds = new HashSet<Long>();
         for (MetricNameDto metricNameDto : metricNames) {
             taskIds.addAll(metricNameDto.getTaskIds());
@@ -35,7 +35,7 @@ public abstract class StandardMetricPlotFetcher<T extends StandardMetricPlotFetc
             taskIdRawMap.put(taskDataId, rawData);
         }
 
-        Multimap<MetricNameDto, PlotDatasetDto> metricNamePlotMap = ArrayListMultimap.create();
+        Multimap<MetricNameDto, PlotSingleDto> metricNamePlotMap = ArrayListMultimap.create();
 
         Map<Long,  MetricNameDto> mappedMetricNames = MetricNameUtil.getMappedMetricDtosByTaskIds(metricNames);
 
@@ -56,7 +56,7 @@ public abstract class StandardMetricPlotFetcher<T extends StandardMetricPlotFetc
         }
 
         for (MetricNameDto metricName : metricNamePlotMap.keySet()) {
-            List<PlotDatasetDto> plotDatasetDtoList = new ArrayList<PlotDatasetDto>(metricNamePlotMap.get(metricName));
+            List<PlotSingleDto> plotDatasetDtoList = new ArrayList<PlotSingleDto>(metricNamePlotMap.get(metricName));
             resultSet.add(
                     Pair.of(
                             metricName,
@@ -72,7 +72,7 @@ public abstract class StandardMetricPlotFetcher<T extends StandardMetricPlotFetc
      * assemble raw data of one taskDataId
      * @param rawData never null or empty
      */
-    protected abstract Iterable<? extends PlotDatasetDto> assemble(Collection<T> rawData);
+    protected abstract Iterable<? extends PlotSingleDto> assemble(Collection<T> rawData);
 
 
     /**

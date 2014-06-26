@@ -6,13 +6,9 @@ import java.util.Set;
 
 /** Class is used to describe result of comparison of metrics to some limit */
 public class DecisionPerLimit {
-    /** Limit we are comparing to */
+
     private Limit limit;
-
-    /** Results of comparison for metrics. Several metrics can match to metricName in limit (f.e. cpu utilization from different agents) */
     private Set<DecisionPerMetric> decisionsPerMetric;
-
-    /** Results of comparison for this limit */
     private Decision decisionPerLimit;
 
     public DecisionPerLimit(Limit limit, Set<DecisionPerMetric> decisionsPerMetric, Decision decisionPerLimit) {
@@ -21,14 +17,17 @@ public class DecisionPerLimit {
         this.decisionPerLimit = decisionPerLimit;
     }
 
+    /** Returns information about limit */
     public Limit getLimit() {
         return limit;
     }
 
+    /** Returns detailed information about decision per every metric matching this limit */
     public Set<DecisionPerMetric>  getDecisionsPerMetric() {
         return decisionsPerMetric;
     }
 
+    /** Returns decision for this limit */
     public Decision getDecisionPerLimit() {
         return decisionPerLimit;
     }

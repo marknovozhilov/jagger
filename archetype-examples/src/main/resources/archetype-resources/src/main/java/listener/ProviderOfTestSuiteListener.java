@@ -11,6 +11,7 @@ import com.griddynamics.jagger.engine.e1.collector.testsuite.TestSuiteListener;
 import com.griddynamics.jagger.engine.e1.services.ServicesAware;
 import com.griddynamics.jagger.engine.e1.services.data.service.MetricEntity;
 import com.griddynamics.jagger.engine.e1.services.data.service.SessionEntity;
+import com.griddynamics.jagger.engine.e1.services.data.service.MetricSummaryValueEntity;
 import com.griddynamics.jagger.engine.e1.services.data.service.TestEntity;
 import com.griddynamics.jagger.util.GeneralNodeInfo;
 import org.apache.maven.model.Model;
@@ -104,10 +105,10 @@ public class ProviderOfTestSuiteListener extends ServicesAware implements Provid
                 // Get summary values for metrics
                 for (Map.Entry<TestEntity,Set<MetricEntity>> entry : metricsPerTest.entrySet()) {
                     //System.out.println("\nTest " + entry.getKey().getName() + " from session " + testSuiteInfo.getSessionId());
-                    Map<MetricEntity,Double> metricValues = getDataService().getMetricSummary(entry.getValue());
+                    Map<MetricEntity,MetricSummaryValueEntity> metricValues = getDataService().getMetricSummary(entry.getValue());
                     //System.out.println(String.format("   %-40s   %s","Metric id","Value"));
-                    for (Map.Entry<MetricEntity,Double> valueEntry : metricValues.entrySet()) {
-                        //System.out.println(String.format("   %-40s   %s",valueEntry.getKey().getMetricId(),valueEntry.getValue()));
+                    for (Map.Entry<MetricEntity,MetricSummaryValueEntity> valueEntry : metricValues.entrySet()) {
+                        //System.out.println(String.format("   %-40s   %s",valueEntry.getKey().getMetricId(),valueEntry.getValue().getValue()));
                     }
                 }
 

@@ -1,4 +1,6 @@
 /// @page JaggerProperties Jagger properties
+/// @brief Section provides full information about properties used by Jagger @n
+/// @details
 /// @n
 /// Back to @ref Main_Properties_group @n
 /// @n

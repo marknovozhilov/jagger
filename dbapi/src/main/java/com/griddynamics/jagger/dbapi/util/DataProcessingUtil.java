@@ -1,14 +1,14 @@
 package com.griddynamics.jagger.dbapi.util;
 
 
+import com.griddynamics.jagger.dbapi.dto.PlotSingleDto;
+import com.griddynamics.jagger.dbapi.dto.SummaryMetricValueDto;
+import com.griddynamics.jagger.dbapi.dto.SummarySingleDto;
 import com.griddynamics.jagger.dbapi.dto.PointDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author "Artem Kirillov" (akirillov@griddynamics.com)
@@ -45,6 +45,43 @@ public class DataProcessingUtil {
             return getMessageFromLastCause(th.getCause());
 
         return th.getMessage();
+    }
+
+    /**
+     * Generate Curve from values in SummarySingleDto object as
+     * {(sessionId1, val1),(sessionId2, val2), ... (sessionIdn, valn)}
+     *
+     * @param metricDto contains values to generate curve
+     * @return curve
+     */
+    public static PlotSingleDto generatePlotSingleDto(SummarySingleDto metricDto) {
+        List<PointDto> list = new ArrayList<PointDto>();
+
+        List<SummaryMetricValueDto> metricList = new ArrayList<SummaryMetricValueDto>();
+        for(SummaryMetricValueDto value: metricDto.getValues()) {
+            metricList.add(value);
+        }
+
+        Collections.sort(metricList, new Comparator<SummaryMetricValueDto>() {
+
+            @Override
+            public int compare(SummaryMetricValueDto o1, SummaryMetricValueDto o2) {
+                return  o2.getSessionId() < o1.getSessionId() ? 1 : -1;
+            }
+        });
+
+        for (SummaryMetricValueDto value: metricList) {
+            double temp = Double.parseDouble(value.getValue());
+            list.add(new PointDto(value.getSessionId(), temp));
+        }
+
+        String legend = metricDto.getMetricName().getMetricDisplayName();
+
+        return new PlotSingleDto(
+                list,
+                legend,
+                ColorCodeGenerator.getHexColorCode(metricDto.getMetricName().getMetricName(), "ss")
+        );
     }
 }
 

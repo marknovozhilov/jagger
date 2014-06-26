@@ -7,13 +7,9 @@ import java.util.Set;
 
 /** Class is used to describe result of comparison of all metrics in some test to limits */
 public class DecisionPerTest {
-    /** Test */
+
     private TestEntity testEntity;
-
-    /** Result of comparison for every limits specified for this test */
     private Set<DecisionPerLimit> decisionsPerLimit;
-
-    /** Result of comparison for this test */
     private Decision decisionPerTest;
 
     public DecisionPerTest(TestEntity testEntity, Set<DecisionPerLimit> decisionsPerLimit, Decision decisionPerTest) {
@@ -22,14 +18,17 @@ public class DecisionPerTest {
         this.decisionPerTest = decisionPerTest;
     }
 
+    /** Returns information about test */
     public TestEntity getTestEntity() {
         return testEntity;
     }
 
+    /** Returns detailed information about decision per every limit in the limit set attached to this test */
     public Set<DecisionPerLimit> getDecisionsPerLimit() {
         return decisionsPerLimit;
     }
 
+    /** Returns decision for this test */
     public Decision getDecisionPerTest() {
         return decisionPerTest;
     }

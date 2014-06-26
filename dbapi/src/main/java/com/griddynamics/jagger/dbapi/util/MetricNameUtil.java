@@ -1,6 +1,7 @@
 package com.griddynamics.jagger.dbapi.util;
 
 import com.griddynamics.jagger.dbapi.dto.MetricNameDto;
+import com.griddynamics.jagger.dbapi.model.MetricNode;
 
 import java.util.*;
 
@@ -46,6 +47,20 @@ public class MetricNameUtil {
             }
         }
         return taskIdMap;
+    }
+
+    /**
+     * Returns set of MetricNameDto objects containing in metricNodes
+     * @param metricNodes collection of MetricNode objects
+     * @return Set of MetricNameDto objects containing in metricNodes */
+    public static Set<MetricNameDto> getMetricNameDtoSet(Collection<MetricNode> metricNodes) {
+        Set<MetricNameDto> metricNameDtoSet = new HashSet<MetricNameDto>();
+
+        for (MetricNode metricNode : metricNodes) {
+            metricNameDtoSet.addAll(metricNode.getMetricNameDtoList());
+        }
+
+        return metricNameDtoSet;
     }
 
     public static String getLatencyMetricName(double latencyKey) {

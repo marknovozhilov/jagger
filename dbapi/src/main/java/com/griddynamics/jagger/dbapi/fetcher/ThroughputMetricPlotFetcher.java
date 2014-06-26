@@ -1,7 +1,7 @@
 package com.griddynamics.jagger.dbapi.fetcher;
 
+import com.griddynamics.jagger.dbapi.dto.PlotSingleDto;
 import com.griddynamics.jagger.dbapi.util.ColorCodeGenerator;
-import com.griddynamics.jagger.dbapi.dto.PlotDatasetDto;
 import com.griddynamics.jagger.dbapi.dto.PointDto;
 import com.griddynamics.jagger.dbapi.parameter.DefaultWorkloadParameters;
 import com.griddynamics.jagger.dbapi.util.DataProcessingUtil;
@@ -11,7 +11,7 @@ import java.util.*;
 public class ThroughputMetricPlotFetcher extends StandardMetricPlotFetcher<ThroughputMetricPlotFetcher.ThroughputRawData> {
 
     @Override
-    protected Iterable<? extends PlotDatasetDto> assemble(Collection<ThroughputRawData> rawData) {
+    protected Iterable<? extends PlotSingleDto> assemble(Collection<ThroughputRawData> rawData) {
         List<PointDto> pointDtoList = new ArrayList<PointDto>(rawData.size());
 
         String sessionId = rawData.iterator().next().getSessionId();
@@ -23,7 +23,8 @@ public class ThroughputMetricPlotFetcher extends StandardMetricPlotFetcher<Throu
         }
 
         String legend = legendProvider.generatePlotLegend(sessionId, DefaultWorkloadParameters.THROUGHPUT.getDescription(), true);
-        return Arrays.asList(new PlotDatasetDto(pointDtoList, legend, ColorCodeGenerator.getHexColorCode()));
+        return Arrays.asList(new PlotSingleDto(pointDtoList, legend,
+                ColorCodeGenerator.getHexColorCode(ColorCodeGenerator.THROUGHPUT_COLOR , sessionId)));
     }
 
     @Override

@@ -97,7 +97,7 @@ public abstract class ResponseValidator<Q, E, R> extends KernelSideObject {
 /// Following XML code should be included in @xlink{test-description} section @n
 /// Order of collectors execution is the same as order of their declaration in XML @n
 /// If @xlink{test-description} has @xlink{test-description,parent}, collectors from @xlink{test-description,parent} will be executed first
-/// @dontinclude  defaults.config.xml
+/// @dontinclude  defaults.conf.xml
 /// @skip  begin: following section is used for docu generation - metric calculator usage
 /// @until end: following section is used for docu generation - metric calculator usage
 ///
@@ -186,7 +186,7 @@ public abstract class ResponseValidator<Q, E, R> extends KernelSideObject {
 /// Set id of custom metric class bean to @xlink{metric-custom,calculator} attribute @n
 /// Attribute @xlink{metric-custom,id} will be used as metric name in reports @n
 /// Set attribute @xlink{metric-custom,plotData} to true if you want to plot 'metric vs time' plot in report
-/// @dontinclude  defaults.config.xml
+/// @dontinclude  defaults.conf.xml
 /// @skip  begin: following section is used for docu generation - metric calculator usage
 /// @until end: following section is used for docu generation - metric calculator usage
 /// @n
@@ -231,7 +231,7 @@ public abstract class ResponseValidator<Q, E, R> extends KernelSideObject {
 ///
 /// <li> Add @xlink{metric-ref} collector to @xlink{test-description,info-collectors} block.@n
 /// Set id of bean to @xlink{metric-ref,ref} attribute.
-/// @dontinclude  defaults.config.xml
+/// @dontinclude  defaults.conf.xml
 /// @skip  begin: following section is used for docu generation - metric calculator usage
 /// @until end: following section is used for docu generation - metric calculator usage
 /// </ol>

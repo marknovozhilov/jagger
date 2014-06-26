@@ -1,4 +1,6 @@
 /// @page WebUiOverview WebUi features overview
+/// @brief Section describes main features of Jagger Web client @n
+/// @details
 /// @n
 /// Back to @ref WebUiMain @n
 /// @n

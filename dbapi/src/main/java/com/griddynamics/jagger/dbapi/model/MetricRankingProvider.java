@@ -1,6 +1,6 @@
 package com.griddynamics.jagger.dbapi.model;
 
-import com.griddynamics.jagger.dbapi.dto.MetricDto;
+import com.griddynamics.jagger.dbapi.dto.SummarySingleDto;
 import com.griddynamics.jagger.util.MetricNamesRankingProvider;
 
 import java.util.Collections;
@@ -25,10 +25,10 @@ public class MetricRankingProvider extends MetricNamesRankingProvider {
         });
     }
 
-    public static void sortMetrics(List<MetricDto> list){
-        Collections.sort(list, new Comparator<MetricDto>() {
+    public static void sortMetrics(List<SummarySingleDto> list){
+        Collections.sort(list, new Comparator<SummarySingleDto>() {
             @Override
-            public int compare(MetricDto metricDto, MetricDto metricDto2) {
+            public int compare(SummarySingleDto metricDto, SummarySingleDto metricDto2) {
                 return MetricRankingProvider.compare(metricDto.getMetricName().getMetricDisplayName(), metricDto2.getMetricName().getMetricDisplayName());
             }
         });
