@@ -34,6 +34,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.util.*;
 
@@ -51,6 +52,7 @@ public class MetricPlotsReporter extends AbstractMappedReportProvider<String> {
     private String sessionId;
     private DatabaseService databaseService;
 
+    @Required
     public void setDatabaseService(DatabaseService databaseService) {
         this.databaseService = databaseService;
     }

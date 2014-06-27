@@ -31,6 +31,7 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.util.*;
 
@@ -42,11 +43,12 @@ import java.util.*;
 public class SessionScopePlotsReporter extends AbstractReportProvider {
     private Logger log = LoggerFactory.getLogger(SessionScopePlotsReporter.class);
 
-    private MetricPlotsReporter.MetricPlotDTOs result = new MetricPlotsReporter.MetricPlotDTOs();
+
     private Map<MetricNode, PlotIntegratedDto> plots = Collections.EMPTY_MAP;
 
     private DatabaseService databaseService;
 
+    @Required
     public void setDatabaseService(DatabaseService databaseService) {
         this.databaseService = databaseService;
     }
@@ -55,6 +57,7 @@ public class SessionScopePlotsReporter extends AbstractReportProvider {
     public JRDataSource getDataSource() {
 
         String sessionId = getSessionIdProvider().getSessionId();
+        MetricPlotsReporter.MetricPlotDTOs result = new MetricPlotsReporter.MetricPlotDTOs();
 
         SessionMatchingSetup sessionMatchingSetup = new SessionMatchingSetup(
                 databaseService.getWebClientProperties().isShowOnlyMatchedTests(),
@@ -72,17 +75,17 @@ public class SessionScopePlotsReporter extends AbstractReportProvider {
             log.error("Unable to get plots information for metrics");
         }
 
-        getReport(sessionScopeNode);
+        getReport(sessionScopeNode, result);
         return new JRBeanCollectionDataSource(Collections.singleton(result));
 
     }
 
-    private void getReport(MetricGroupNode metricGroupNode) {
+    private void getReport(MetricGroupNode metricGroupNode, MetricPlotsReporter.MetricPlotDTOs result) {
         try {
 
             if (metricGroupNode.getMetricGroupNodeList() != null) {
                 for (MetricGroupNode metricGroup : (List<MetricGroupNode>) metricGroupNode.getMetricGroupNodeList())
-                    getReport(metricGroup);
+                    getReport(metricGroup, result);
             }
             if (metricGroupNode.getMetricsWithoutChildren() != null) {
 
